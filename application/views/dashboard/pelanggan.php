@@ -9,7 +9,7 @@
           <small><?php echo $this->session->flashdata('message'); ?></small>
           <div class="card">
             <div class="card-header">
-              <h3>List Member</h3>
+              <h3><b>Member</b></h3>
             </div>
             <!-- /.card-header -->
             <div class="card-body">

@@ -10,14 +10,12 @@ class Dashboard extends CI_Controller {
 		$this->load->model('Model_Promo');
 		$this->load->model('Model_Pelanggan');
 		$this->load->helper(array('form', 'url'));
-		$ver2=$this->session->userdata('role_id');
-		if($ver2 == 2 || $ver2 == ''){
-			redirect('ecommerce');
-		}
 	}
 
 	public function index()
 	{
+		$this->session->set_userdata(['sidebar' => 'dashboard']);
+
 		$this->load->view('dashboard/header');
 		$this->load->view('dashboard/asidebar');
 
@@ -35,6 +33,8 @@ class Dashboard extends CI_Controller {
 
 	public function produk()
 	{
+		$this->session->set_userdata(['sidebar' => 'produk']);
+
 		$this->load->view('dashboard/header');
 		$this->load->view('dashboard/asidebar');
 		$this->load->view('dashboard/modal_product');
@@ -139,6 +139,7 @@ class Dashboard extends CI_Controller {
 
 	public function promo()
 	{
+
 		$this->load->view('dashboard/header');
 		$this->load->view('dashboard/asidebar');
 		$this->load->view('dashboard/modal_promo');
@@ -231,6 +232,8 @@ class Dashboard extends CI_Controller {
 
 	public function member()
 	{
+		$this->session->set_userdata(['sidebar' => 'member']);
+
 		$this->load->view('dashboard/header');
 		$this->load->view('dashboard/asidebar');
 		$data['members']= $this->getDatatableMember();

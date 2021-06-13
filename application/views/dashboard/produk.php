@@ -12,10 +12,12 @@
             <div class="card-header">
               <div class="row">
                 <div class="col-md-6">
-                  <h3>List Produk</h3>
+                  <h3><b>Produk</b></h3>
                 </div>
                 <div class="col-md-6">
+                <?php if(!in_array($this->session->userdata('role_id'),[2,3])): ?>
                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_tambah"  style="float:right;" onclick="cleanForm()">Tambah</button>
+                  <?php endif; ?>
                 </div>
               </div>
             </div>
@@ -32,11 +34,13 @@
                         <th>Deskripsi</th>
                         <th>Kategori</th>
                         <th>Gambar</th>
-                        <th>Berat (Kg)</th>
+                        <th>Berat (gr)</th>
                         <th>Ukuran</th>
                         <th>Harga (Rp)</th>
                         <th>Stok</th>
+                        <?php if(!in_array($this->session->userdata('role_id'),[2,3])): ?>
                         <th>Aksi</th>
+                        <?php endif; ?>
                       </tr>
                     </thead>
                     <tbody>
@@ -52,7 +56,9 @@
                         <td class="text-center"><?php echo $row['size']; ?></td>
                         <td class="text-center"><?php echo number_format($row['price'],2,',','.'); ?></td>
                         <td class="text-center"><?php echo ($row['stock'] > 0 ? $row['stock'] :  '<span class="badge badge-danger">Habis</span>'); ?></td>
+                        <?php if(!in_array($this->session->userdata('role_id'),[2,3])): ?>
                         <td class="text-center"><?php echo $row['action']; ?></td>
+                        <?php endif; ?>
                       </tr>
                       <?php endforeach; ?>
                     </tbody>
