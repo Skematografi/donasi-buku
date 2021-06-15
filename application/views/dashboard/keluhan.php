@@ -11,7 +11,7 @@
             <div class="card-header">
               <div class="row">
                 <div class="col-md-6">
-                  <h3><b>Member</b></h3>
+                  <h3><b>Keluhan</b></h3>
                 </div>
                 <div class="col-md-6">
                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_tambah"  style="float:right;" onclick="cleanForm()">Tambah</button>
@@ -24,31 +24,27 @@
                 <thead>
                 <tr class="text-center">
                   <th>No.</th>
-                  <th>Nama</th>
-                  <th>Jenis Kelamin</th>
-                  <th>Telepon</th>
-                  <th>Email</th>
-                  <th>Alamat</th>
-                  <th>Provinsi</th>
-                  <th>Kabupaten/Kota</th>
-                  <th>Kecamatan</th>
+                  <th>Tgl Keluhan</th>
+                  <th>Kategori</th>
+                  <th>Kronologi</th>
+                  <th>Pelapor</th>
+                  <th>Status</th>
+                  <th>Tindakan</th>
                   <th>Aksi</th>
                 </tr>
                 </thead>
                 <tbody>
-                <?php $i=1; foreach($members as $row): ?>
-                <tr>
-                  <td class="text-center"><?= $i++; ?></td>
-                  <td><?= $row['name']; ?></td>
-                  <td><?= $row['gender']; ?></td>
-                  <td><?= $row['phone']; ?></td>
-                  <td><?= $row['email']; ?></td>
-                  <td><?= $row['address']; ?></td>
-                  <td><?= $row['state']; ?></td>
-                  <td><?= $row['city']; ?></td>
-                  <td><?= $row['district']; ?></td>
-                  <td class="text-center"><?= $row['action']; ?></td>
-                </tr>
+                <?php $i=1; foreach($complaints as $row): ?>
+                    <tr>
+                    <td class="text-center"><?= $i++; ?></td>
+                    <td><?= $row['created_at']; ?></td>
+                    <td><?= $row['category']; ?></td>
+                    <td><?= $row['description']; ?></td>
+                    <td><?= $row['informer']; ?></td>
+                    <td><?= $row['status']; ?></td>
+                    <td><?= $row['action']; ?></td>
+                    <td class="text-center"><?= $row['response']; ?></td>
+                    </tr>
                 <?php endforeach;?>
                 </tbody>
               </table>
@@ -94,42 +90,10 @@
     $('#pelanggan').DataTable();
   });
 
-  function editPromo(ele){
+  function proses(ele){
 
     let id = $(ele).attr('data-id');
-    let url = '<?= base_url(); ?>Dashboard/edit_member';
-    let form = $('#form_elastis').serialize();
-
-    $.ajax({
-      url : url,
-      method : 'POST',
-      data: {id: id},
-      dataType: 'json',
-      success : function(res){
-
-        cleanForm();
-        $('#title_modal_promo').empty().append('Update Member');
-
-        $('#member_id').val(res[0].id);
-        $('#name').val(res[0].name);
-        $('#email').val(res[0].email);
-        $('#phone').val(res[0].phone);
-        $('#postal_code').val(res[0].postal_code);
-        $('#address').val(res[0].address);
-        $('#submit').val('Update');
-
-        $('#modal_tambah').modal('show');
-
-      }, error : function(err){
-        console.log(err)
-      }
-    });
-  }
-
-  function deletePromo(ele){
-
-    let id = $(ele).attr('data-id');
-    let url = '<?= base_url(); ?>Dashboard/hapus_member';
+    let url = '<?= base_url(); ?>Dashboard/prosesKeluhan';
 
     $.ajax({
       url : url,
@@ -142,14 +106,8 @@
         console.log(err)
       }
     });
-
   }
 
-  function cleanForm(){
-    $('#name, #email,#phone,#postal_code,#address,#member_id').val('');
-    $('#title_modal_promo').empty().append('Tambah Member');
-    $('#submit').val('Simpan');
-  }
 </script>
 </body>
 </html>

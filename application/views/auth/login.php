@@ -1,5 +1,5 @@
 
-<body class="hold-transition login-page">
+<body class="hold-transition login-page bg-dark">
 <div class="login-box">
   <!-- /.login-logo -->
   <div class="card">
@@ -20,7 +20,7 @@
         </div>
         <div class="row">
           <div class="col-12">
-            <button type="submit" class="btn btn-primary btn-block">Login</button>
+            <button type="submit" class="btn btn-primary btn-block" style="background-color: #ff00de;">Login</button>
           </div>
         </div>
       </form>

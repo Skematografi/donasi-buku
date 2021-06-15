@@ -9,6 +9,8 @@ class Dashboard extends CI_Controller {
 		$this->load->model('Model_Produk');
 		$this->load->model('Model_Promo');
 		$this->load->model('Model_Pelanggan');
+		$this->load->model('Model_Location');
+		$this->load->model('Model_Complaint');
 		$this->load->helper(array('form', 'url'));
 	}
 
@@ -135,99 +137,6 @@ class Dashboard extends CI_Controller {
 	}	
 
 	
-	//CRUD Promo ========================================================
-
-	public function promo()
-	{
-
-		$this->load->view('dashboard/header');
-		$this->load->view('dashboard/asidebar');
-		$this->load->view('dashboard/modal_promo');
-		$data['promotions']= $this->getDatatablePromo();
-		$data['promo'] = $this->db->query("SELECT count(id) as aktif FROM promotions WHERE end_date >= now() AND status = 1")->row();
-		$this->load->view('dashboard/promo',$data);	
-	}
-
-    public function tambah_promo(){
-
-		$id = $this->input->post('promo_id',TRUE);
-		$code = strtoupper($this->input->post('code',TRUE));
-		$start = new DateTime($this->input->post('start_date'));
-		$end = new DateTime($this->input->post('end_date'));
-		$check = $this->Model_Promo->getProductByCode($code);
-
-		//Proses penyimpanan data
-		if ($start > $end){
-			$this->session->set_flashdata('message', '<div class="alert alert-warning alert-dismissible" role="alert"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Promo gagal di simpan, tanggal akhir harus lebih dari tanggal mulai</div>');
-
-		} else {
-
-			if(strlen($id) == 0){
-					$data = [
-						'code' => $code,
-						'name' => htmlspecialchars($this->input->post('name',TRUE)),
-						'description' => htmlspecialchars($this->input->post('description',TRUE)),
-						'start_date' => $this->input->post('start_date',TRUE),
-						'end_date' => $this->input->post('end_date',TRUE),
-						'discount' => $this->input->post('discount',TRUE)
-					];
-
-					if($check == 0){
-						$this->Model_Promo->tambah($data); //memasukan data ke database
-						$this->session->set_flashdata('message', '<div class="alert alert-info alert-dismissible" role="alert"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Promo berhasil di simpan</div>');
-					} else {
-						$this->session->set_flashdata('message', '<div class="alert alert-warning alert-dismissible" role="alert"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Promo gagal di simpan, Kode sudah pernah digunakan</div>');
-					}
-
-			} else {
-
-				$data = [
-					'name' => htmlspecialchars($this->input->post('name',TRUE)),
-					'description' => htmlspecialchars($this->input->post('description',TRUE)),
-					'start_date' => $this->input->post('start_date',TRUE),
-					'end_date' => $this->input->post('end_date',TRUE),
-					'discount' => $this->input->post('discount',TRUE)
-				];
-
-				$now = date('Y-m-d');
-
-				$sql = "SELECT a.id as total FROM promotions a WHERE a.end_date > '$now' AND a.status = 1";
-
-				$query = $this->db->query($sql);
-
-				$num_row = $query->num_rows();
-
-				if($num_row > 0){
-					$this->session->set_flashdata('message', '<div class="alert alert-warning alert-dismissible" role="alert"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Sudah ada promo yang berjalan</div>');
-				} else {
-					$this->Model_Promo->update($id, $data); //memasukan data ke database
-					$this->session->set_flashdata('message', '<div class="alert alert-info alert-dismissible" role="alert"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Promo berhasil di update</div>');
-				}
-				
-			}
-		}
-
-		redirect('dashboard/promo');
-		
-  	}
-
-	public function hapus_promo(){
-		$id = $this->input->post('id',TRUE);
-
-		$this->Model_Promo->hapus($id, ["status" => 0]);
-		$this->session->set_flashdata('message', '<div class="alert alert-info alert-dismissible" role="alert"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a> Promo berhasil di hapus</div>');
-
-		echo json_encode(['link' =>'Dashboard/promo']);
-	}
-
-	public function edit_promo(){
-		$id = $this->input->post('id',TRUE);
-		$data = $this->Model_Promo->getProductById($id);
-		echo json_encode($data);
-	}	
-
-
-	
 	//Member ========================================================
 
 	public function member()
@@ -236,9 +145,81 @@ class Dashboard extends CI_Controller {
 
 		$this->load->view('dashboard/header');
 		$this->load->view('dashboard/asidebar');
+		$locations = $this->Model_Location->getState();
+		$this->load->view('dashboard/modal_member',['locations' => $locations]);
 		$data['members']= $this->getDatatableMember();
 		$this->load->view('dashboard/pelanggan',$data);	
 	}
+	
+    public function tambah_member(){
+
+		$id = $this->input->post('member_id',TRUE);
+		$phone = $this->input->post('phone',TRUE);
+		$email = $this->input->post('email',TRUE);
+									
+		//Proses penyimpanan data	
+		if(strlen($id) == 0){
+				$data = [
+					'name' => htmlspecialchars($this->input->post('name',TRUE)),
+					'gender' => $this->input->post('gender',TRUE),
+					'phone' => $this->input->post('phone',TRUE),
+					'email' => $this->input->post('email',TRUE),
+					'state' => $this->input->post('state',TRUE),
+					'city' => $this->input->post('city',TRUE),
+					'district' => $this->input->post('district',TRUE),
+					'postal_code' => $this->input->post('postal_code',TRUE),
+					'address' => $this->input->post('address',TRUE)
+				];
+
+				$check_phone = $this->db->query("SELECT * FROM members WHERE phone = '$phone'")->num_rows();
+				$check_email = $this->db->query("SELECT * FROM members WHERE email = '$email '")->num_rows();
+
+				if($check_phone == 0 && $check_email == 0){
+					$this->Model_Pelanggan->tambah($data); //memasukan data ke database
+					$this->session->set_flashdata('message', '<div class="alert alert-info alert-dismissible" role="alert"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Member berhasil di simpan</div>');
+				} else if($check_email > 0){
+					$this->session->set_flashdata('message', '<div class="alert alert-warning alert-dismissible" role="alert"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Email sudah terdaftar</div>');
+				} else if($check_phone > 0){
+					$this->session->set_flashdata('message', '<div class="alert alert-warning alert-dismissible" role="alert"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Telepon sudah terdaftar</div>');
+				}
+
+		} else {
+
+			$data = [
+				'name' => htmlspecialchars($this->input->post('name',TRUE)),
+				'gender' => $this->input->post('gender',TRUE),
+				'phone' => $this->input->post('phone',TRUE),
+				'email' => $this->input->post('email',TRUE),
+				'state' => $this->input->post('state',TRUE),
+				'city' => $this->input->post('city',TRUE),
+				'district' => $this->input->post('district',TRUE),
+				'postal_code' => $this->input->post('postal_code',TRUE),
+				'address' => $this->input->post('address',TRUE)
+			];
+
+			$check_phone = $this->db->query("SELECT * FROM members WHERE phone = '$phone' AND id != '$id'")->num_rows();
+			$check_email = $this->db->query("SELECT * FROM members WHERE email = '$email' AND id != '$id'")->num_rows();
+
+			if($check_phone == 0 && $check_email == 0){
+				$this->Model_Pelanggan->update($id, $data); //memasukan data ke database
+				$this->session->set_flashdata('message', '<div class="alert alert-info alert-dismissible" role="alert"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Member berhasil di update</div>');
+			} else if($check_email > 0){
+				$this->session->set_flashdata('message', '<div class="alert alert-warning alert-dismissible" role="alert"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Email sudah terdaftar</div>');
+			} else if($check_phone > 0){
+				$this->session->set_flashdata('message', '<div class="alert alert-warning alert-dismissible" role="alert"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Telepon sudah terdaftar</div>');
+			}
+			
+		}
+
+		redirect('dashboard/member');
+		
+  	}
+
+	public function edit_member(){
+		$id = $this->input->post('id',TRUE);
+		$data = $this->Model_Pelanggan->getMemberById($id);
+		echo json_encode($data);
+	}	
 
 	public function hapus_member(){
 		$id = $this->input->post('id',TRUE);
@@ -248,172 +229,31 @@ class Dashboard extends CI_Controller {
 		echo json_encode(['link' =>'Dashboard/member']);
 	}
 
-	//Order ========================================================
+	//Keluhan ========================================================
 
-	public function pesanan()
+	public function keluhan()
 	{
+		$this->session->set_userdata(['sidebar' => 'keluhan']);
+
 		$this->load->view('dashboard/header');
 		$this->load->view('dashboard/asidebar');
-		$this->load->view('dashboard/modal_konfirmasi');
-		$this->load->view('dashboard/modal_tolak');
-		$this->load->view('dashboard/modal_struk');
-
-		$get_orders = $this->Model_Order->getOrder();
-
-		$orders = array();
-
-		foreach($get_orders as $item){
-
-			$orders[] = [
-				'code' => $item->code,
-				'date' => $item->created_at,
-				'buyer' => '<b>'.$item->name.'</b><br>'.$item->address.'<br>Telp. '.$item->phone,
-				'product' => $this->Model_Order->getOrderDetail($item->id),
-				'evidence_transfer' => '<a href="javascript:void(0);" title="Lihat struk pembayaran" data-struck="'.$item->evidence_transfer.'"  data-toggle="modal" data-target="#modal_struk" onclick="showStruck(this)"><i class="fa fa-file-text text-secondary" style="font-size:20px;"></i></a>',
-				'sender' => 'No. Rek. : <br><b>'.$item->account_number.'</b><br>Atas Nama : <br><b>'.$item->account_name.'</b><br>Nominal : <br><b>Rp '.number_format($item->total_price).'</b>',
-				'shipping_cost' => '<b>Rp '.number_format($item->shipping_cost).'</b>',
-				'action' => '<a href="javascript:void(0);" title="Konfirmasi pesanan" data-id="'.$item->id.'" data-toggle="modal" data-target="#modal_konfirmasi" onclick="confOrder(this)"><i class="fa fa-check-circle text-success" style="font-size:30px;"></i></a><br><br><a href="javascript:void(0);" title="Tolak pesanan" data-id="'.$item->id.'" data-toggle="modal" data-target="#modal_tolak" onclick="cancelOrder(this)"><i class="fa fa-close text-danger" style="font-size:30px;"></i></a>'
-			];
-		}
-
-		$this->load->view('dashboard/pesanan', ['orders' => $orders]);	
+		$data['complaints']= $this->getDatatableComplaint();
+		$this->load->view('dashboard/keluhan',$data);	
 	}
 
-	public function konfirmasi_pesanan(){
+	public function prosesKeluhan(){
 
-		$id = $this->input->post('order_id');
-		$resi = strtoupper($this->input->post('resi'));
+		$id = $this->input->post('id',TRUE);
 
-		$order = $this->db->query("UPDATE orders a SET a.status = 'Selesai', a.resi = '$resi' WHERE id = '$id'");
+		$this->sendEmailProcess($id);
 
-		if(!$order){
-			$this->session->set_flashdata('message', '<div class="alert alert-warning alert-dismissible" role="alert"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Pesanan gagal dikonfirmasi</div>');
+		$this->db->query("UPDATE complaints SET status = 'Proses' WHERE id = '$id' ");
 
-		} else {
+		$this->session->set_flashdata('message', '<div class="alert alert-info alert-dismissible" role="alert"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>E-Mail proses keluhan berhasil terkirim ke pelapor</div>');
 
-			$update_product = $this->Model_Order->updateStock($id);
-			
-			if(!$update_product){
-				$this->session->set_flashdata('message', '<div class="alert alert-warning alert-dismissible" role="alert"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Stok produk gagal diupdate</div>');
-			} else {
-				
-				$this->sendEmailWithResi($id);
-
-				$this->session->set_flashdata('message', '<div class="alert alert-primary alert-dismissible" role="alert"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Pesanan berhasil dikonfimasi ke pembeli</div>');
-			
-			}
-		}
-
-		redirect('dashboard/pesanan');			
-
-	}
-
-	public function tolak_pesanan(){
-
-		$id = $this->input->post('order_id_tolak');
-		$because = strtoupper($this->input->post('because'));
-
-		$order = $this->db->query("UPDATE orders a SET a.status = 'Ditolak', a.because = '$because' WHERE id = '$id'");
-
-		if(!$order){
-			$this->session->set_flashdata('message', '<div class="alert alert-warning alert-dismissible" role="alert"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Pesanan gagal ditolak</div>');
-
-		} else {
-				
-				$this->sendEmailWithBecause($id);
-
-				$this->session->set_flashdata('message', '<div class="alert alert-primary alert-dismissible" role="alert"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Pesanan berhasil ditolak dan pembeli telah dikirim email konfirmasi</div>');
-			
-		}
-
-		redirect('dashboard/pesanan');			
-
-	}
-
-	public function penjualan()
-	{
-		$this->load->view('dashboard/header');
-		$this->load->view('dashboard/asidebar');
-		$this->load->view('dashboard/modal_struk');
-		$this->load->view('dashboard/modal_report');
-
-		$get_orders = $this->Model_Order->getSales();
-
-		$orders = array();
-
-		foreach($get_orders as $item){
-
-			$orders[] = [
-				'code' => $item->code,
-				'date' => $item->created_at,
-				'buyer' => '<b>'.$item->name.'</b><br>'.$item->address.'<br>Telp. '.$item->phone,
-				'product' => $this->Model_Order->getOrderDetail($item->id),
-				'evidence_transfer' => '<a href="javascript:void(0);" title="Lihat struk pembayaran" data-struck="'.$item->evidence_transfer.'"  data-toggle="modal" data-target="#modal_struk" onclick="showStruck(this)"><i class="fa fa-file-text text-secondary" style="font-size:20px;"></i></a>',
-				'sender' => 'No. Rek. : <br><b>'.$item->account_number.'</b><br>Atas Nama : <br><b>'.$item->account_name.'</b><br>Nominal : <br><b>Rp '.number_format($item->total_price).'</b>'
-			];
-		}
-
-		$this->load->view('dashboard/penjualan', ['orders' => $orders]);	
-	}
-
-	public function laporan()
-	{
-		$start = new DateTime($this->input->post('start_date'));
-		$end = new DateTime($this->input->post('end_date'));
-		$str_start = $this->input->post('start_date');
-		$str_end = $this->input->post('end_date');
-
-		if($start > $end){
-			$this->session->set_flashdata('message', '<div class="alert alert-warning alert-dismissible" role="alert"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Tanggal mulai harus kurang dari tanggal akhir</div>');
-			redirect('dashboard/penjualan');
-		}
-
-		$get_orders = $this->Model_Order->getReport($str_start,$str_end);
-
-		$orders = array();
-		$total = 0;
-
-		foreach($get_orders as $item){
-
-			$orders[] = [
-				'invoice' => $item->invoice,
-				'date' => $item->created_at,
-				'buyer' => '<b>'.$item->name.'</b><br>'.$item->address.'<br>Telp. '.$item->phone,
-				'product' => $this->Model_Order->getOrderDetail($item->id),
-				'sender' => 'No. Rek. : <br><b>'.$item->account_number.'</b><br>Atas Nama : <br><b>'.$item->account_name,
-				'nominal' => '<b>'.number_format($item->total_price).'</b>'
-			];
-
-			$total += $item->total_price;
-		}
-
-		$group_id = $this->db->query("SELECT GROUP_CONCAT(a.id) as id
-										FROM orders a
-										WHERE a.status = 'Selesai' 
-										AND a.evidence_transfer IS NOT NULL")->row();
-
-		$sql_sale = "SELECT SUM(b.quantity) as total
-						FROM order_details b 
-						WHERE b.order_id IN ($group_id->id) AND (b.created_at BETWEEN '$str_start' AND '$str_end')";
-		// var_dump($sql_sale); die();
-		$exec_sql = $this->db->query($sql_sale)->row();
-
-		$report =  [
-			'orders' => $orders, 
-			'admin' =>  $this->session->userdata('name'),
-			'total' => $total,
-			'start' => $this->input->post('start_date'),
-			'end' => $this->input->post('end_date'),
-			'total_sale' => $exec_sql->total
-		];
-
-		$this->load->library('pdf');
-        $html = $this->load->view('dashboard/GeneratePdfView', $report, true);
-        $this->pdf->createPDF($html, 'mypdf', false);
+		echo json_encode(['link' =>'Dashboard/keluhan']);
 
 
-		// $this->load->view('dashboard/laporan',$data);
-			
 	}
 
 	//Datatable Collection ========================================================
@@ -456,39 +296,6 @@ class Dashboard extends CI_Controller {
 				"state" => $row['state'],
 				"city" => $row['city'],
 				"district" => $row['district'],
-				"action" => '<a href="javascript:void(0);" title="Klik untuk menghapus" data-id="'.$row['id'].'" onclick="deleteMember(this)"><i class="fas fa-remove text-danger"></i></a>'
-			];
-		}
-
-        return $data;
-	}
-
-	public function getDatatablePromo()
-	{   
-
-		$products = $this->Model_Promo->getData();
-		$data = array();
-		$now = new DateTime(date('Y-m-d'));
-		
-		foreach($products as $row) {
-			
-			$start = new DateTime($row['start_date']);
-			$end = new DateTime($row['end_date']);
-
-			if($end >= $now) {
-				$status = '<div class="badge badge-success">Berjalan</div>';
-			} else {
-				$status = '<div class="badge badge-secondary">Berakhir</div>';
-			}
-
-			$data[] = [
-				"code" => $row['code'],
-				"name" => $row['name'],
-				"description" => $row['description'],
-				"discount" => $row['discount'],
-				"start_date" => $row['start_date'],
-				"end_date" => $row['end_date'],
-				"status" => $status,
 				"action" => '<a href="javascript:void(0);" title="Klik untuk melakukan perubahan" data-id="'.$row['id'].'" class="mr-1" onclick="editPromo(this)"><i class="far fa-edit text-primary"></i></a><a href="javascript:void(0);" title="Klik untuk menghapus" data-id="'.$row['id'].'" onclick="deletePromo(this)"><i class="far fa-trash-alt text-danger"></i></a>'
 			];
 		}
@@ -496,35 +303,52 @@ class Dashboard extends CI_Controller {
         return $data;
 	}
 
-	//Send Email to buyer
-	function sendEmailWithResi($id){
+	public function getDatatableComplaint()
+	{   
 
-		$data = $this->db->query("SELECT * FROM orders WHERE id = '$id'")->row();
+		$complaints = $this->Model_Complaint->getData();
+		$data = array();
+		foreach($complaints as $row) {
 
-        $this->email->from('admin@colornizer.co', 'Colornizer.co');
+			if($row['status'] == 'Menunggu Tindakan'){
+				$status = '<div class="badge badge-secondary">'.$row['status'].'</div>';
+				$response = '<a href="javascript:void(0);" title="Klik untuk memproses keluhan" data-id="'.$row['id'].'" class="mr-3" onclick="proses(this)"><i class="fas fa-spinner text-secondary"></i></a><a href="javascript:void(0);" title="Klik untuk memberi tindakan" data-id="'.$row['id'].'" onclick="selesai(this)"><i class="far fa-check-square text-success"></i></a>';
+			} else if($row['status'] == 'Proses'){
+				$status = '<div class="badge badge-warning">'.$row['status'].'</div>';
+				$response = '<a href="javascript:void(0);" title="Klik untuk memberi tindakan" data-id="'.$row['id'].'" onclick="selesai(this)"><i class="far fa-check-square text-success"></i></a>';
+			} else {
+				$status = '<div class="badge badge-success">'.$row['status'].'</div>';
+				$response = '';
+			}
 
-		$this->email->to($data->email);
+			$data[] = [
+				"category" => $row['category'],
+				"description" => 'Deskripsi :<br><b>'.$row['description'].'</b><br>Produk :<br><b>'.($row['product'] == NULL ? '-' : $row['product']).'</b>',
+				"informer" => 'Nama : <br><b>'.$row['informer'].'</b><br>ID Member : <br><b>'.($row['member_id'] == NULL ? '-' : $row['member_id']).'</b><br>Email : <br><b>'.$row['email'].'</b>',
+				"action" => 'Deskripsi : <br><b>'.($row['action'] == NULL ? '-' : $row['action']).'</b><br>Tgl. Tindakan :<br><b>'.($row['action_date'] == NULL ? '-' : $row['action_date']).'</b>',
+				"status" => $status,
+				"created_at" => $row['created_at'],
+				"response" => $response
+			];
+		}
+
+        return $data;
+	}
+
+	//Send Email to Member
+	function sendEmailProcess($id){
+
+		$getComplaint = $this->db->query("SELECT a.*,
+										(SELECT b.name FROM products b WHERE b.id = a.product_id) as product
+										FROM complaints a WHERE a.id = '$id' ")->row();
+
+        $this->email->from('admin@geraifashion.com', 'Gerai Fashion');
+
+		$this->email->to($getComplaint->email);
  
-		$this->email->subject('Colonizer.co');
+		$this->email->subject('Gerai Fashion');
         
-        $this->email->message($this->load->view('template_email/konfirmasi',$data, true));
-
-		$this->email->set_mailtype('html');
-
-		$this->email->send();
-    }
-
-	function sendEmailWithBecause($id){
-
-		$data = $this->db->query("SELECT * FROM orders WHERE id = '$id'")->row();
-
-        $this->email->from('admin@colornizer.co', 'Colornizer.co');
-
-		$this->email->to($data->email);
- 
-		$this->email->subject('Colonizer.co');
-        
-        $this->email->message($this->load->view('template_email/tolak',$data, true));
+        $this->email->message($this->load->view('template_email/proses',$getComplaint, true));
 
 		$this->email->set_mailtype('html');
 

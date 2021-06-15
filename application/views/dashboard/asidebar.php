@@ -50,7 +50,7 @@
           </li>
           <?php if($this->session->userdata('role_id') != 2): ?>
           <li class="nav-item">
-            <a href="<?php echo base_url();?>dashboard/promo" class="nav-link">
+            <a href="<?php echo base_url();?>dashboard/keluhan" class="nav-link <?= ( $this->session->userdata('sidebar') == 'keluhan' ? 'active' : '' );?>">
               <i class="nav-icon fas fa-comments"></i>
               <p>
                 Keluhan
