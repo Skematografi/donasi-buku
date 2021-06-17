@@ -33,7 +33,7 @@
     <div class="row">
         <img src="<?php echo base_url();?>assets/images/logo/logo.png" class="center" style="width:200px; hight:auto;">
         <p>Dear <?= $informer;?>,</p>
-        <p>Keluhan anda tentang <?= $category;?> kami sedang diproses.</p> 
+        <p>Keluhan anda tentang <?= $category;?> kami telah kami berikan tindakan.</p> 
         <p>Mohon maaf, berikut detail keluhan anda :</p>
         <hr>
         <p>Kronologi</p>
@@ -55,6 +55,21 @@
                 <td><?= ($product == NULL ? '-' :  $product);?></td>
             </tr>
             <?php endif; ?>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Tgl. Tindakan</td>
+                <td>:</td>
+                <td style="color:red;"><?= $action_date;?></td>
+            </tr>
+            <tr>
+                <td>Tindakan Kami</td>
+                <td>:</td>
+                <td style="color:red;"><?= $action;?></td>
+            </tr>
         </table>
         <br>
         <br>

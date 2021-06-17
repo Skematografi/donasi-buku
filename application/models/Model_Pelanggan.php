@@ -19,7 +19,7 @@ class  Model_Pelanggan extends CI_Model {
 
 	public function getData(){
 
-		$sql="SELECT a.id,a.name,a.email,a.phone,a.gender,a.address,a.state,a.city,a.district,a.postal_code
+		$sql="SELECT a.id,a.code,a.name,a.email,a.phone,a.gender,a.address,a.state,a.city,a.district,a.postal_code
 				FROM members a WHERE a.status = 1
 				ORDER BY a.created_at DESC";
 

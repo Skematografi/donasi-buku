@@ -160,6 +160,7 @@ class Dashboard extends CI_Controller {
 		//Proses penyimpanan data	
 		if(strlen($id) == 0){
 				$data = [
+					'code' => $this->generateRandomString(6),
 					'name' => htmlspecialchars($this->input->post('name',TRUE)),
 					'gender' => $this->input->post('gender',TRUE),
 					'phone' => $this->input->post('phone',TRUE),
@@ -215,6 +216,16 @@ class Dashboard extends CI_Controller {
 		
   	}
 
+	function generateRandomString($length = 10) {
+		$characters = '23456789BCDEFGHJKLMNPQRSTUVWXYZ';
+		$charactersLength = strlen($characters);
+		$randomString = '';
+		for ($i = 0; $i < $length; $i++) {
+			$randomString .= $characters[rand(0, $charactersLength - 1)];
+		}
+		return $randomString;
+	}
+
 	public function edit_member(){
 		$id = $this->input->post('id',TRUE);
 		$data = $this->Model_Pelanggan->getMemberById($id);
@@ -237,8 +248,30 @@ class Dashboard extends CI_Controller {
 
 		$this->load->view('dashboard/header');
 		$this->load->view('dashboard/asidebar');
+		$new['member'] = $this->Model_Pelanggan->getData();
+		$new['product'] = $this->Model_Produk->getData();
+		$this->load->view('dashboard/modal_keluhan',$new);
+		$this->load->view('dashboard/modal_tindakan');
 		$data['complaints']= $this->getDatatableComplaint();
 		$this->load->view('dashboard/keluhan',$data);	
+	}
+
+	public function tambah_keluhan(){
+
+		$data = [
+			'member_id' => $this->input->post('member_id'),
+			'informer' => $this->input->post('name'),
+			'email' => $this->input->post('email'),
+			'category' => $this->input->post('category'),
+			'created_at' =>  $this->input->post('created_at').' '.date('H:m:s'),
+		];
+
+		$this->Model_Complaint->tambah($data);
+
+		$this->session->set_flashdata('message', '<div class="alert alert-info alert-dismissible" role="alert"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Keluhan berhasil di simpan</div>');
+
+		redirect('dashboard/keluhan');
+
 	}
 
 	public function prosesKeluhan(){
@@ -252,6 +285,24 @@ class Dashboard extends CI_Controller {
 		$this->session->set_flashdata('message', '<div class="alert alert-info alert-dismissible" role="alert"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>E-Mail proses keluhan berhasil terkirim ke pelapor</div>');
 
 		echo json_encode(['link' =>'Dashboard/keluhan']);
+
+
+	}
+
+	
+	public function selesaiKeluhan(){
+
+		$id = $this->input->post('complaint_id',TRUE);
+		$action = $this->input->post('action',TRUE);
+		$today = date('Y-m-d H:m:s');
+
+		$this->db->query("UPDATE complaints SET status = 'Selesai', action = '$action', action_date = '$today' WHERE id = '$id' ");
+		
+		$this->sendEmailSelesai($id);
+
+		$this->session->set_flashdata('message', '<div class="alert alert-info alert-dismissible" role="alert"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>E-Mail konfirmasi keluhan selesai berhasil terkirim ke pelapor</div>');
+
+		redirect('dashboard/keluhan');
 
 
 	}
@@ -288,6 +339,7 @@ class Dashboard extends CI_Controller {
 		$data = array();
 		foreach($products as $row) {
 			$data[] = [
+				"code" => $row['code'],
 				"name" => $row['name'],
 				"email" => $row['email'],
 				"phone" => $row['phone'],
@@ -349,6 +401,25 @@ class Dashboard extends CI_Controller {
 		$this->email->subject('Gerai Fashion');
         
         $this->email->message($this->load->view('template_email/proses',$getComplaint, true));
+
+		$this->email->set_mailtype('html');
+
+		$this->email->send();
+    }
+
+	function sendEmailSelesai($id){
+
+		$getComplaint = $this->db->query("SELECT a.*,
+										(SELECT b.name FROM products b WHERE b.id = a.product_id) as product
+										FROM complaints a WHERE a.id = '$id' ")->row();
+
+        $this->email->from('admin@geraifashion.com', 'Gerai Fashion');
+
+		$this->email->to($getComplaint->email);
+ 
+		$this->email->subject('Gerai Fashion');
+        
+        $this->email->message($this->load->view('template_email/selesai',$getComplaint, true));
 
 		$this->email->set_mailtype('html');
 

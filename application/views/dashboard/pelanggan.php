@@ -24,6 +24,7 @@
                 <thead>
                 <tr class="text-center">
                   <th>No.</th>
+                  <th>ID Member</th>
                   <th>Nama</th>
                   <th>Jenis Kelamin</th>
                   <th>Telepon</th>
@@ -39,6 +40,7 @@
                 <?php $i=1; foreach($members as $row): ?>
                 <tr>
                   <td class="text-center"><?= $i++; ?></td>
+                  <td><?= $row['code']; ?></td>
                   <td><?= $row['name']; ?></td>
                   <td><?= $row['gender']; ?></td>
                   <td><?= $row['phone']; ?></td>

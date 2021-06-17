@@ -108,6 +108,13 @@
     });
   }
 
+  function selesai(ele){
+
+    let id = $(ele).attr('data-id');
+    $('#complaint_id').val(id);
+    $('#modal_tindakan').modal('show');
+}
+
 </script>
 </body>
 </html>

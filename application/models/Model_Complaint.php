@@ -5,7 +5,7 @@ class  Model_Complaint extends CI_Model {
 
 	public function tambah($data){
 	   try{
-	      $this->db->insert('promotions', $data);
+	      $this->db->insert('complaints', $data);
 	      return true;
 	    }catch(Exception $e){
 			return $e;
@@ -14,13 +14,13 @@ class  Model_Complaint extends CI_Model {
 
 	public function hapus($id, $data){
 		$this->db->where(['id' => $id]);
-		$this->db->update('promotions', $data);
+		$this->db->update('complaints', $data);
 	}
 
 	public function update($id,$data){
         try{
             $this->db->where(['id' => $id]);
-            $this->db->update('promotions', $data);
+            $this->db->update('complaints', $data);
             return true;
         }catch(Exception $e){
             return $e;
@@ -42,7 +42,7 @@ class  Model_Complaint extends CI_Model {
 	public function getProductById($id){
 
 		$sql="SELECT a.id,a.code,a.name,a.description,a.start_date,a.end_date,a.discount
-				FROM promotions a WHERE a.id = '".$id."' AND a.status = 1";
+				FROM complaints a WHERE a.id = '".$id."' AND a.status = 1";
 
 		$query = $this->db->query($sql);
 
