@@ -59,7 +59,7 @@
           </li>
           <?php endif; ?>
           <li class="nav-item">
-            <a href="<?php echo base_url();?>dashboard/promo" class="nav-link">
+            <a href="<?php echo base_url();?>dashboard/siaran" class="nav-link <?= ( $this->session->userdata('sidebar') == 'siaran' ? 'active' : '' );?>">
               <i class="nav-icon fas fa-send"></i>
               <p>
                 Siaran

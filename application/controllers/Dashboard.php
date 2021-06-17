@@ -5,9 +5,8 @@ class Dashboard extends CI_Controller {
 	
 	function __construct(){
 		parent::__construct();
-		$this->load->model('Model_Order');
 		$this->load->model('Model_Produk');
-		$this->load->model('Model_Promo');
+		$this->load->model('Model_Siaran');
 		$this->load->model('Model_Pelanggan');
 		$this->load->model('Model_Location');
 		$this->load->model('Model_Complaint');
@@ -21,17 +20,17 @@ class Dashboard extends CI_Controller {
 		$this->load->view('dashboard/header');
 		$this->load->view('dashboard/asidebar');
 
-		$data['pesanan']=$this->db->query("SELECT COUNT(id) as total FROM orders WHERE status = 'Menunggu Verifikasi' AND evidence_transfer IS NOT NULL")->row();
-		$data['penjualan']=$this->db->query("SELECT COUNT(id) as total FROM orders WHERE status = 'Selesai' AND resi IS NOT NULL")->row();
-		$data['produk']=$this->db->query('SELECT COUNT(id) as total FROM products WHERE status = 1')->row();
-		$data['pelanggan']=$this->db->query("SELECT COUNT(id) as total FROM members WHERE status = 1 AND email != 'admin@gmail.com'")->row();
-		$this->load->view('dashboard/index',$data);
+		// $data['pesanan']=$this->db->query("SELECT COUNT(id) as total FROM orders WHERE status = 'Menunggu Verifikasi' AND evidence_transfer IS NOT NULL")->row();
+		// $data['penjualan']=$this->db->query("SELECT COUNT(id) as total FROM orders WHERE status = 'Selesai' AND resi IS NOT NULL")->row();
+		// $data['produk']=$this->db->query('SELECT COUNT(id) as total FROM products WHERE status = 1')->row();
+		// $data['pelanggan']=$this->db->query("SELECT COUNT(id) as total FROM members WHERE status = 1 AND email != 'admin@gmail.com'")->row();
+		$this->load->view('dashboard/index');
 		$this->load->view('dashboard/footer');
 			
 	}
 
 
-	//CRUD Produk ========================================================
+	//Produk ========================================================
 
 	public function produk()
 	{
@@ -262,6 +261,7 @@ class Dashboard extends CI_Controller {
 			'member_id' => $this->input->post('member_id'),
 			'informer' => $this->input->post('name'),
 			'email' => $this->input->post('email'),
+			'description' => $this->input->post('description'),
 			'category' => $this->input->post('category'),
 			'created_at' =>  $this->input->post('created_at').' '.date('H:m:s'),
 		];
@@ -305,6 +305,70 @@ class Dashboard extends CI_Controller {
 		redirect('dashboard/keluhan');
 
 
+	}
+
+
+	//Siaran ========================================================
+
+	public function siaran()
+	{
+		$this->session->set_userdata(['sidebar' => 'siaran']);
+
+		$this->load->view('dashboard/header');
+		$this->load->view('dashboard/asidebar');
+		$this->load->view('dashboard/modal_siaran');
+		$data['broadcast'] = $this->getDatatableSiaran();
+		$this->load->view('dashboard/siaran',$data);	
+	}
+
+	public function tambah_siaran(){
+
+    	$config['upload_path'] = './assets/siaran/';
+    	$config['allowed_types'] = 'jpg|png|JPEG';
+    	$config['max_size'] = 2048;
+
+    	$this->upload->initialize($config);
+		$this->load->library('upload');
+		
+		if (!$this->upload->do_upload('image')) {
+			$this->session->set_flashdata('message', '<div class="alert alert-warning alert-dismissible" role="alert"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Siaran gagal di tambah</div>');
+			redirect('dashboard/siaran');
+		} else {
+			$file = $this->upload->data();
+			$data = [
+				'image' => $file['file_name'],
+				'title' => htmlspecialchars($this->input->post('title',TRUE)),
+				'description' => htmlspecialchars($this->input->post('description',TRUE))
+			];
+			$this->Model_Siaran->tambah_siaran($data); //memasukan data ke database
+			$this->session->set_flashdata('message', '<div class="alert alert-info alert-dismissible" role="alert"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Siaran berhasil di tambah</div>');
+			redirect('dashboard/siaran');
+
+		}
+
+		
+  	}
+
+	public function hapus_siaran(){
+		$id = $this->input->post('id',TRUE);
+		$this->db->query("UPDATE broadcasts SET status = 0 WHERE id = '$id' ");
+		$this->session->set_flashdata('message', '<div class="alert alert-info alert-dismissible" role="alert"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a> Siaran berhasil di hapus</div>');
+
+		echo json_encode(['link' =>'Dashboard/siaran']);
+	}
+
+	public function kirim_siaran(){
+		$id = $this->input->post('id',TRUE);
+		$member = $this->db->query("SELECT * FROM members WHERE status = 1")->num_rows();
+		$after_repeat = $this->db->query("SELECT a.repeat FROM broadcasts a WHERE a.id = '$id' ")->row();
+		$repeat = (int) $after_repeat->repeat + 1;
+
+		$this->sendEmailSiaran($id);
+
+		$this->db->query("UPDATE broadcasts a SET a.receiver = '$member', a.repeat = '$repeat' WHERE a.id = '$id' ");
+		$this->session->set_flashdata('message', '<div class="alert alert-info alert-dismissible" role="alert"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a> Siaran berhasil di dikirim ke member</div>');
+
+		echo json_encode(['link' =>'Dashboard/siaran']);
 	}
 
 	//Datatable Collection ========================================================
@@ -387,6 +451,26 @@ class Dashboard extends CI_Controller {
         return $data;
 	}
 
+	public function getDatatableSiaran()
+	{   
+
+		$broadcasts = $this->Model_Siaran->getData();
+		$data = array();
+		foreach($broadcasts as $row) {
+
+			$data[] = [
+				"title" => $row['title'],
+				"image" => $row['image'],
+				"description" => $row['description'],
+				"repeat" => $row['repeat'],
+				"receiver" => $row['receiver'],
+				"action" =>'<a href="javascript:void(0);" title="Klik hapus siaran" data-id="'.$row['id'].'" class="mr-3" onclick="hapusSiaran(this)"><i class="fas fa-trash text-danger"></i></a><a href="javascript:void(0);" title="Klik untuk mengirim siaran" data-id="'.$row['id'].'" onclick="kirimSiaran(this)"><i class="far fa-send text-primary"></i></a>'
+			];
+		}
+
+        return $data;
+	}
+
 	//Send Email to Member
 	function sendEmailProcess($id){
 
@@ -424,6 +508,29 @@ class Dashboard extends CI_Controller {
 		$this->email->set_mailtype('html');
 
 		$this->email->send();
+    }
+
+	function sendEmailSiaran($id){
+
+		$broadcast = $this->db->query("SELECT * FROM broadcasts WHERE id = '$id' ")->row();
+
+		$members = $this->db->query("SELECT * FROM members WHERE status = 1 ")->result();
+
+		foreach($members as $row){
+
+			$this->email->from('admin@geraifashion.com', 'Gerai Fashion');
+	
+			$this->email->to($row->email);
+	 
+			$this->email->subject($broadcast->title);
+			
+			$this->email->message($this->load->view('template_email/siaran',$broadcast, true));
+	
+			$this->email->set_mailtype('html');
+	
+			$this->email->send();
+		}
+
     }
 
 }

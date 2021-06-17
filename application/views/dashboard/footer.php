@@ -1,6 +1,6 @@
  <!-- Main Footer -->
   <footer class="main-footer text-right">
-    <strong>Copyright &copy; 2021 <a href="<?php echo base_url();?>" target="_blank">Clothing Brand Colonizer.co</a>.</strong>
+    <strong>Copyright &copy; 2021 <a href="<?php echo base_url();?>" target="_blank">Gerai Fashion</a>.</strong>
     All rights reserved.
   </footer>
 </div>

@@ -33,7 +33,7 @@
 
               <div class="info-box-content">
                 <span class="info-box-text">Pesanan Baru</span>
-                <span class="info-box-number"><?php echo $pesanan->total; ?></span>
+                <span class="info-box-number"></span>
               </div>
               <!-- /.info-box-content -->
             </div>
@@ -46,7 +46,7 @@
 
               <div class="info-box-content">
                 <span class="info-box-text">Penjualan</span>
-                <span class="info-box-number"><?php echo $penjualan->total; ?></span>
+                <span class="info-box-number"></span>
               </div>
               <!-- /.info-box-content -->
             </div>
@@ -63,7 +63,7 @@
 
               <div class="info-box-content">
                 <span class="info-box-text">Produk</span>
-                <span class="info-box-number"><?php echo $produk->total; ?></span>
+                <span class="info-box-number"></span>
               </div>
               <!-- /.info-box-content -->
             </div>
@@ -76,7 +76,7 @@
 
               <div class="info-box-content">
                 <span class="info-box-text">Member</span>
-                <span class="info-box-number"><?php echo $pelanggan->total; ?></span>
+                <span class="info-box-number"></span>
               </div>
               <!-- /.info-box-content -->
             </div>

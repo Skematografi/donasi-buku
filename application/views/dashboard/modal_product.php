@@ -27,16 +27,18 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-sm-6">
+                <div class="col-sm-12">
                   <div class="form-group">
                     <label>Kategori <span class="text-danger">*</span></label>
-                    <textarea class="form-control" id="category" name="category" maxlength="100" rows="3" placeholder="Gunakan tanda (,) koma untuk pemisah" required></textarea>
+                    <textarea class="form-control" id="category" name="category" rows="3" placeholder="Gunakan tanda (,) koma untuk pemisah" required></textarea>
                   </div>
                 </div>
-                <div class="col-sm-6">
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
                   <div class="form-group">
                     <label>Deskripsi <span class="text-danger">*</span></label>
-                    <textarea class="form-control" id="description" name="description" maxlength="100" rows="3" placeholder="Gunakan tanda (,) koma untuk pemisah" required></textarea>
+                    <textarea class="form-control" id="description" name="description" rows="5" placeholder="Gunakan tanda (,) koma untuk pemisah" required></textarea>
                   </div>
                 </div>
               </div>
@@ -65,8 +67,8 @@
                 </div>
                 <div class="col-sm-6">
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Berat <span class="text-danger">*</span></label>
-                    <input type="number" class="form-control" id="weight" min="1" max="100" name="weight" required>
+                    <label for="exampleInputEmail1">Berat (gr)<span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" id="weight" min="100" max="1000000" name="weight" required>
                   </div>
                 </div>
               </div>

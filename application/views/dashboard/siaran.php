@@ -8,43 +8,50 @@
         <div class="col-md-12">
           <small><?php echo $this->session->flashdata('message'); ?></small>
           <div class="card">
+
             <div class="card-header">
               <div class="row">
                 <div class="col-md-6">
-                  <h3><b>Keluhan</b></h3>
+                  <h3><b>Siaran</b></h3>
                 </div>
                 <div class="col-md-6">
-                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_tambah"  style="float:right;" onclick="cleanForm()">Tambah</button>
+                <?php if(in_array($this->session->userdata('role_id'),[1,2])): ?>
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_tambah"  style="float:right;">Tambah</button>
+                  <?php endif; ?>
                 </div>
               </div>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-              <table id="pelanggan" class="table table-bordered table-striped table-responsive">
-                <thead>
-                <tr class="text-center">
-                  <th>No.</th>
-                  <th>Tgl Keluhan</th>
-                  <th>Kategori</th>
-                  <th>Kronologi</th>
-                  <th>Pelapor</th>
-                  <th>Status</th>
-                  <th>Tindakan</th>
-                  <th>Aksi</th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php $i=1; foreach($complaints as $row): ?>
+              <div class="row">
+                <div class="col-md-12">
+                  <table id="tableProduct" class="table table-bordered table-striped table-responsive">
+                    <thead>
+                      <tr class="text-center">
+                        <th>No.</th>
+                        <th>Judul</th>
+                        <th>Gambar</th>
+                        <th>Deskripsi</th>
+                        <th>Terkirim</th>
+                        <th>Penerima</th>
+                        <?php if(in_array($this->session->userdata('role_id'),[1,2])): ?>
+                        <th>Aksi</th>
+                        <?php endif; ?>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    <?php $i=1; foreach($broadcast as $row): ?>
                     <tr>
                     <td class="text-center"><?= $i++; ?></td>
-                    <td><?= $row['created_at']; ?></td>
-                    <td><?= $row['category']; ?></td>
+                    <td><?= $row['title']; ?></td>
+                    <td>
+                        <img src="<?php echo base_url();?>assets/siaran/<?= $row['image']; ?>" alt="" style="width:300px;">
+                    </td>
                     <td><?= $row['description']; ?></td>
-                    <td><?= $row['informer']; ?></td>
-                    <td><?= $row['status']; ?></td>
-                    <td><?= $row['action']; ?></td>
-                    <td class="text-center"> 
-                      <?= $row['response']; ?><br><br>
+                    <td class="text-center"><?= $row['repeat']; ?> x</td>
+                    <td><?= $row['receiver']; ?> Member</td>
+                    <td class="text-center">
+                        <?= $row['action']; ?><br><br>
                         <div class="text-center">
                             <div class="spinner-border text-secondary" id="wait" role="status">
                                 <span class="sr-only">Loading...</span>
@@ -53,9 +60,11 @@
                         </div>
                     </td>
                     </tr>
-                <?php endforeach;?>
-                </tbody>
-              </table>
+                    <?php endforeach;?>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
             <!-- /.card-body -->
           </div>
@@ -67,6 +76,7 @@
     </section>
     <!-- /.content -->
   </div>
+
   <!-- /.content-wrapper -->
   <footer class="main-footer text-right">
     <strong>Copyright &copy; 2021 <a href="<?php echo base_url();?>" target="_blank">Gerai Fashion</a>.</strong>
@@ -92,41 +102,54 @@
 <script src="<?php echo base_url();?>assets/dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="<?php echo base_url();?>assets/dist/js/demo.js"></script>
+
 <!-- page script -->
 <script>
   $(function () {
-    $('#pelanggan').DataTable();
-    $('#wait,#label-wait').hide(); 
+    $("#tableProduct").DataTable();
+    $("#wait,#label-wait").hide();
   });
 
-  function proses(ele){
+  
+  function hapusSiaran(ele){
 
     let id = $(ele).attr('data-id');
-    let url = '<?= base_url(); ?>Dashboard/prosesKeluhan';
+    let url = '<?= base_url(); ?>Dashboard/hapus_siaran';
 
     $.ajax({
-      url : url,
-      method : 'POST',
-      data: {id: id},
-      dataType: 'json',
-      beforeSend: function() { $('#wait,#label-wait').show(); },
-      complete: function() { $('#wait,#label-wait').hide(); },
-      success : function(res){
+    url : url,
+    method : 'POST',
+    data: {id: id},
+    dataType: 'json',
+    success : function(res){
         window.location.href = "<?= base_url(); ?>"+res.link;
-      }, error : function(err){
+    }, error : function(err){
         console.log(err)
-      }
+    }
     });
+
   }
 
-  function selesai(ele){
+  function kirimSiaran(ele){
 
     let id = $(ele).attr('data-id');
-    $('#complaint_id').val(id);
-    $('#modal_tindakan').modal('show');
-    $('#wait,#label-wait').show();
-}
+    let url = '<?= base_url(); ?>Dashboard/kirim_siaran';
 
+    $.ajax({
+    url : url,
+    method : 'POST',
+    data: {id: id},
+    dataType: 'json',
+    beforeSend: function() { $('#wait,#label-wait').show(); },
+    complete: function() { $('#wait,#label-wait').hide(); },
+    success : function(res){
+        window.location.href = "<?= base_url(); ?>"+res.link;
+    }, error : function(err){
+        console.log(err)
+    }
+    });
+
+  }
 </script>
 </body>
 </html>
