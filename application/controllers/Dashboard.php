@@ -20,11 +20,11 @@ class Dashboard extends CI_Controller {
 		$this->load->view('dashboard/header');
 		$this->load->view('dashboard/asidebar');
 
-		// $data['pesanan']=$this->db->query("SELECT COUNT(id) as total FROM orders WHERE status = 'Menunggu Verifikasi' AND evidence_transfer IS NOT NULL")->row();
-		// $data['penjualan']=$this->db->query("SELECT COUNT(id) as total FROM orders WHERE status = 'Selesai' AND resi IS NOT NULL")->row();
-		// $data['produk']=$this->db->query('SELECT COUNT(id) as total FROM products WHERE status = 1')->row();
-		// $data['pelanggan']=$this->db->query("SELECT COUNT(id) as total FROM members WHERE status = 1 AND email != 'admin@gmail.com'")->row();
-		$this->load->view('dashboard/index');
+		$data['produk']=$this->db->query('SELECT COUNT(id) as total FROM products WHERE status = 1')->row();
+		$data['member']=$this->db->query("SELECT COUNT(id) as total FROM members WHERE status = 1")->row();
+		$data['keluhan']=$this->db->query("SELECT COUNT(id) as total FROM complaints WHERE status = 'Menunggu Tindakan' OR status = 'Proses' ")->row();
+		$data['siaran']=$this->db->query("SELECT COUNT(id) as total FROM broadcasts WHERE status = 1")->row();
+		$this->load->view('dashboard/index',$data);
 		$this->load->view('dashboard/footer');
 			
 	}

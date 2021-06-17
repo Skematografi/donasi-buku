@@ -27,89 +27,71 @@
       <div class="container-fluid">
         <!-- Info boxes -->
         <div class="row">
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box to-page" onclick="toOrder()">
-              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-shopping-bag"></i></span>
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3><?= $produk->total; ?></h3>
 
-              <div class="info-box-content">
-                <span class="info-box-text">Pesanan Baru</span>
-                <span class="info-box-number"></span>
+                <p>Produk</p>
               </div>
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
-          <!-- /.col -->
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box mb-3 to-page"  onclick="toSale()">
-              <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-line-chart"></i></span>
-
-              <div class="info-box-content">
-                <span class="info-box-text">Penjualan</span>
-                <span class="info-box-number"></span>
+              <div class="icon">
+                <i class="fas fa-list"></i>
               </div>
-              <!-- /.info-box-content -->
+              <a href="<?= base_url(); ?>dashboard/produk" class="small-box-footer">Lihat Detail <i class="fas fa-arrow-circle-right"></i></a>
             </div>
-            <!-- /.info-box -->
           </div>
-          <!-- /.col -->
 
-          <!-- fix for small devices only -->
-          <div class="clearfix hidden-md-up"></div>
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-warning">
+              <div class="inner">
+                <h3><?= $member->total; ?></h3>
 
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box mb-3 to-page" onclick="toProduct()">
-              <span class="info-box-icon bg-success elevation-1"><i class="fas fa-shopping-cart"></i></span>
-
-              <div class="info-box-content">
-                <span class="info-box-text">Produk</span>
-                <span class="info-box-number"></span>
+                <p>Member</p>
               </div>
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
-          <!-- /.col -->
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box mb-3 to-page" onclick="toMember()">
-              <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-users"></i></span>
-
-              <div class="info-box-content">
-                <span class="info-box-text">Member</span>
-                <span class="info-box-number"></span>
+              <div class="icon">
+                <i class="fas fa-users"></i>
               </div>
-              <!-- /.info-box-content -->
+              <a href="<?= base_url(); ?>dashboard/member" class="small-box-footer">Lihat Detail <i class="fas fa-arrow-circle-right"></i></a>
             </div>
-            <!-- /.info-box -->
           </div>
-          <!-- /.col -->
+
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-danger">
+              <div class="inner">
+                <h3><?= $keluhan->total; ?></h3>
+
+                <p>Keluhan</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-comments"></i>
+              </div>
+              <a href="<?= base_url(); ?>dashboard/keluhan" class="small-box-footer">Lihat Detail <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+              <div class="inner">
+                <h3><?= $siaran->total; ?></h3>
+
+                <p>Siaran</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-send"></i>
+              </div>
+              <a href="<?= base_url(); ?>dashboard/siaran" class="small-box-footer">Lihat Detail <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+
         </div>
-        <!-- /.row -->
-
-        <!-- /.row -->
-
       </div><!--/. container-fluid -->
     </section>
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
-
-  <script>
-    function toOrder(){
-      window.location.href = '<?= base_url(); ?>dashboard/pesanan';
-    }
-
-    function toSale(){
-      window.location.href = '<?= base_url(); ?>dashboard/penjualan';
-    }
-
-    function toProduct(){
-      window.location.href = '<?= base_url(); ?>dashboard/produk';
-    }
-
-    function toMember(){
-      window.location.href = '<?= base_url(); ?>dashboard/member';
-    }
-  </script>
 
  
