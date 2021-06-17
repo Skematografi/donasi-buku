@@ -68,7 +68,7 @@
           </li>
           <?php if($this->session->userdata('role_id') == 1): ?>
           <li class="nav-item">
-            <a href="<?php echo base_url();?>dashboard/promo" class="nav-link">
+            <a href="<?php echo base_url();?>dashboard/laporan" class="nav-link <?= ( $this->session->userdata('sidebar') == 'laporan' ? 'active' : '' );?>">
               <i class="nav-icon fas fa-file-text"></i>
               <p>
                 Laporan

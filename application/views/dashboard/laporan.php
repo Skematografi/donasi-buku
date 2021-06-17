@@ -1,106 +1,132 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   <title>Laporan</title>
-  <link rel="shortcut icon" type="image/x-icon" href="<?php echo base_url();?>assets/images/favicon.ico">
-  <!-- Tell the browser to be responsive to screen width -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Bootstrap 4 -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+    </section>
+    <!-- Main content -->
+    <section class="content">
+      <div class="row">
+        <div class="col-md-12">
+          <small><?php echo $this->session->flashdata('message'); ?></small>
+          <div class="card">
+            <div class="card-header">
+              <h3><b>Laporan</b></h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <form method="post" action="<?php echo base_url('dashboard/cetakLaporan'); ?>" target="_blank" autocomplete="off">
+                <div class="row">
+                  <div class="col-sm-6">
+                      <div class="form-group">
+                        <label for="exampleInputPassword1">Kategori Keluhan<span class="text-danger">*</span></label>
+                        <select class="form-control" name="category" required>
+                            <option value="" selected disabled>--Pilih Kategori Keluhan--</option>
+                            <option value="Produk">Produk</option>
+                            <option value="Pelayanan">Pelayanan</option>
+                            <option value="Lain-lain">Lain-lain</option>
+                        </select>
+                      </div>
+                  </div>
+                  <div class="col-sm-6">
+                      <div class="form-group">
+                          <label for="exampleInputEmail1">Status</label>
+                          <select class="form-control" name="status" id="status">
+                              <option value="" selected disabled>--Pilih Status--</option>
+                              <option value="Menunggu Tindakan">Menunggu Tindakan</option>
+                              <option value="Proses">Proses</option>
+                              <option value="Selesai">Selesai</option>
+                          </select>
+                      </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="exampleInputPassword1">Tanggal Mulai<span class="text-danger">*</span></label>
+                      <input type="date" class="form-control" id="start_date" name="start_date" required>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="exampleInputPassword1">Tanggal Akhir<span class="text-danger">*</span></label>
+                      <input type="date" class="form-control" id="end_date" name="end_date" required>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer text-right">
+                <button type="submit" class="btn btn-primary">Cetak Laporan</button>
+              </div>
+              <!-- /.card-body -->
+            </form>
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  <footer class="main-footer text-right">
+    <strong>Copyright &copy; 2021 <a href="<?php echo base_url();?>" target="_blank">Gerai Fashion</a>.</strong>
+    All rights reserved.
+  </footer>
 
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="<?php echo base_url();?>assets/plugins/fontawesome-free/css/all.min.css">
-  <!-- Ionicons -->
-  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="<?php echo base_url();?>assets/dist/css/adminlte.min.css">
-
-</head>
-<body>
-<div class="wrapper">
-  <!-- Main content -->
-  <section class="invoice">
-    <!-- title row -->
-    <div class="row">
-      <div class="col-12">
-        <h2 class="page-header">
-          <img src="<?php echo base_url();?>assets/images/logo/logo.png" alt="AdminLTE Logo" class="brand-image" style=" width:200px; height:70px; opacity: .8;">
-          <small class="float-right">Tanggal : <?php echo date('d-m-Y'); ?></small>
-        </h2>
-      </div>
-      <!-- /.col -->
-    </div>
-    <!-- info row -->
-    <div class="row invoice-info">
-      <div class="col-sm-4 invoice-col">
-        <address>
-          <strong>Toko Sinar Rangkasbitung</strong>
-        </address>
-      </div>
-      <!-- /.col -->
-      <div class="col-sm-4 invoice-col">
-        <h2>LAPORAN PENJUALAN</h2>
-      </div>
-      <!-- /.col -->
-      <div class="col-sm-4 invoice-col">
-      </div>
-      <!-- /.col -->
-    </div><br>
-    <!-- /.row -->
-
-    <!-- Table row -->
-    <div class="row">
-      <div class="col-12">
-        <table class="table table-striped table-responsive text-center">
-          <thead>
-          <tr>
-            <th>No.</th>
-            <th>ID Pesanan</th>
-            <th>Tanggal</th>
-            <th>ID Pelanggan</th>
-            <th>Nama Pelanggan</th>
-            <th>Telepon</th>
-            <th>Alamat</th>
-            <th>ID Produk</th>
-            <th>Jumlah</th>
-            <th>Harga</th>
-            <th>Ongkir</th>
-            <th>Total</th>
-          </tr>
-          </thead>
-          <tbody>
-          </tbody>
-        </table>
-      </div>
-      <!-- /.col -->
-    </div>
-    <!-- /.row -->
-
-    <div class="row">
-      <!-- accepted payments column -->
-      <div class="col-6">
-      </div>
-      <!-- /.col -->
-      <div class="col-6">
-        <p class="lead">Total Penjualan</p>
-          <table class="table" style="font-size: 18pt;">
-            <tr>
-              <th>Total :</th>
-              <td style="text-align: right;">Rp 10000000</td>
-            </tr>
-          </table>
-      </div>
-      <!-- /.col -->
-    </div>
-    <!-- /.row -->
-  </section>
-  <!-- /.content -->
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+  </aside>
+  <!-- /.control-sidebar -->
 </div>
 <!-- ./wrapper -->
 
-<script type="text/javascript"> 
-  window.addEventListener("load", window.print());
+<!-- jQuery -->
+<script src="<?php echo base_url();?>assets/plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="<?php echo base_url();?>assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- DataTables -->
+<script src="<?php echo base_url();?>assets/plugins/datatables/jquery.dataTables.js"></script>
+<script src="<?php echo base_url();?>assets/plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
+<!-- AdminLTE App -->
+<script src="<?php echo base_url();?>assets/dist/js/adminlte.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="<?php echo base_url();?>assets/dist/js/demo.js"></script>
+<!-- page script -->
+<script>
+  $(function () {
+    $('#pelanggan').DataTable();
+    $('#wait,#label-wait').hide(); 
+  });
+
+  function proses(ele){
+
+    let id = $(ele).attr('data-id');
+    let url = '<?= base_url(); ?>Dashboard/prosesKeluhan';
+
+    $.ajax({
+      url : url,
+      method : 'POST',
+      data: {id: id},
+      dataType: 'json',
+      beforeSend: function() { $('#wait,#label-wait').show(); },
+      complete: function() { $('#wait,#label-wait').hide(); },
+      success : function(res){
+        window.location.href = "<?= base_url(); ?>"+res.link;
+      }, error : function(err){
+        console.log(err)
+      }
+    });
+  }
+
+  function selesai(ele){
+
+    let id = $(ele).attr('data-id');
+    $('#complaint_id').val(id);
+    $('#modal_tindakan').modal('show');
+    $('#wait,#label-wait').show();
+}
+
 </script>
 </body>
 </html>

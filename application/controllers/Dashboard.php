@@ -371,6 +371,52 @@ class Dashboard extends CI_Controller {
 		echo json_encode(['link' =>'Dashboard/siaran']);
 	}
 
+	//Laporan ========================================================
+
+	public function laporan()
+	{
+		$this->session->set_userdata(['sidebar' => 'laporan']);
+
+		$this->load->view('dashboard/header');
+		$this->load->view('dashboard/asidebar');
+		$this->load->view('dashboard/laporan');	
+	}
+
+	public function cetakLaporan(){
+
+		$category = $this->input->post('category');
+		$status = $this->input->post('status');
+		$start_date = $this->input->post('start_date');
+		$end_date = $this->input->post('end_date');
+
+		$a = new DateTime($start_date);
+        $a->modify("+1 day");
+        $start = $a->format("Y-m-d");
+
+		$b = new DateTime($end_date);
+        $b->modify("+1 day");
+        $end = $b->format("Y-m-d");
+
+		if($a > $b){
+			$this->session->set_flashdata('message', '<div class="alert alert-warning alert-dismissible" role="alert"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Tanggal mulai harus kurang dari tanggal akhir</div>');
+			redirect('dashboard/laporan');
+		}
+
+		$sql = "SELECT a.*, 
+		(SELECT b.code FROM members b WHERE b.id = a.member_id) as member_code,
+		(SELECT c.name FROM products c WHERE c.id = a.product_id) as product_name
+		FROM complaints a
+		WHERE a.status = '$status' AND a.category = '$category' AND (a.created_at BETWEEN '$start' AND '$end')";
+
+		$data['report'] = $this->db->query($sql)->result();
+		$data['start'] = $a;
+		$data['end'] = $b;
+
+		$this->load->library('pdf');
+        $html = $this->load->view('dashboard/laporanPdf', $data, true);
+        $this->pdf->createPDF($html, 'mypdf', false);
+	}
+
 	//Datatable Collection ========================================================
 
 	public function getDatatableProduct()
