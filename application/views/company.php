@@ -238,7 +238,7 @@
     </div>
   </footer><!-- End Footer -->
 
-  <a href="https://api.whatsapp.com/send?phone=6281315052884&text=Assalamualaikum%20Wr.%20Wb.%20Admin%20Gerai%20Fashion" target="_blank" class="icon-whatsapp">
+  <a href="https://api.whatsapp.com/send?phone=6283896117890&text=Assalamualaikum%20Wr.%20Wb.%20Admin%20Gerai%20Fashion" target="_blank" class="icon-whatsapp">
       <img src="<?php echo base_url();?>assets/images/logo/whatsapp.png" alt="icon whatsapp" id="whatsapp" >
   </a>
 
