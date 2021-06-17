@@ -30,7 +30,9 @@
                   <th>Pelapor</th>
                   <th>Status</th>
                   <th>Tindakan</th>
+                  <?php if($this->session->userdata('role_id') != 2): ?>
                   <th>Aksi</th>
+                  <?php endif; ?>
                 </tr>
                 </thead>
                 <tbody>
@@ -43,15 +45,17 @@
                     <td><?= $row['informer']; ?></td>
                     <td><?= $row['status']; ?></td>
                     <td><?= $row['action']; ?></td>
+                    <?php if($this->session->userdata('role_id') != 2): ?>
                     <td class="text-center"> 
                       <?= $row['response']; ?><br><br>
-                        <div class="text-center">
-                            <div class="spinner-border text-secondary" id="wait" role="status">
+                        <div class="text-center" id="wait">
+                            <div class="spinner-border text-secondary" role="status">
                                 <span class="sr-only">Loading...</span>
                             </div>
                             <small id="label-wait">Loading...</small>
                         </div>
                     </td>
+                    <?php endif; ?>
                     </tr>
                 <?php endforeach;?>
                 </tbody>
@@ -69,7 +73,7 @@
   </div>
   <!-- /.content-wrapper -->
   <footer class="main-footer text-right">
-    <strong>Copyright &copy; 2021 <a href="<?php echo base_url();?>" target="_blank">Gerai Fashion</a>.</strong>
+    <strong>Copyright &copy; 2021 <a href="<?php echo base_url();?>gerai" target="_blank">Gerai Fashion</a>.</strong>
     All rights reserved.
   </footer>
 
@@ -124,7 +128,6 @@
     let id = $(ele).attr('data-id');
     $('#complaint_id').val(id);
     $('#modal_tindakan').modal('show');
-    $('#wait,#label-wait').show();
 }
 
 </script>

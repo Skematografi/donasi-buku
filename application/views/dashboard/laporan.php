@@ -69,7 +69,7 @@
   </div>
   <!-- /.content-wrapper -->
   <footer class="main-footer text-right">
-    <strong>Copyright &copy; 2021 <a href="<?php echo base_url();?>" target="_blank">Gerai Fashion</a>.</strong>
+    <strong>Copyright &copy; 2021 <a href="<?php echo base_url();?>gerai" target="_blank">Gerai Fashion</a>.</strong>
     All rights reserved.
   </footer>
 

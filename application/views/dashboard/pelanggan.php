@@ -14,7 +14,9 @@
                   <h3><b>Member</b></h3>
                 </div>
                 <div class="col-md-6">
+                <?php if($this->session->userdata('role_id') != 3): ?>
                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_tambah"  style="float:right;" onclick="cleanForm()">Tambah</button>
+                  <?php endif; ?>
                 </div>
               </div>
             </div>
@@ -33,7 +35,9 @@
                   <th>Provinsi</th>
                   <th>Kabupaten/Kota</th>
                   <th>Kecamatan</th>
+                  <?php if($this->session->userdata('role_id') != 3): ?>
                   <th>Aksi</th>
+                  <?php endif; ?>
                 </tr>
                 </thead>
                 <tbody>
@@ -49,7 +53,9 @@
                   <td><?= $row['state']; ?></td>
                   <td><?= $row['city']; ?></td>
                   <td><?= $row['district']; ?></td>
+                  <?php if($this->session->userdata('role_id') != 3): ?>
                   <td class="text-center"><?= $row['action']; ?></td>
+                  <?php endif; ?>
                 </tr>
                 <?php endforeach;?>
                 </tbody>
@@ -67,7 +73,7 @@
   </div>
   <!-- /.content-wrapper -->
   <footer class="main-footer text-right">
-    <strong>Copyright &copy; 2021 <a href="<?php echo base_url();?>" target="_blank">Gerai Fashion</a>.</strong>
+    <strong>Copyright &copy; 2021 <a href="<?php echo base_url();?>gerai" target="_blank">Gerai Fashion</a>.</strong>
     All rights reserved.
   </footer>
 

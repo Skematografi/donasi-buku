@@ -15,7 +15,7 @@
                   <h3><b>Siaran</b></h3>
                 </div>
                 <div class="col-md-6">
-                <?php if(in_array($this->session->userdata('role_id'),[1,2])): ?>
+                <?php if($this->session->userdata('role_id') != 3): ?>
                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_tambah"  style="float:right;">Tambah</button>
                   <?php endif; ?>
                 </div>
@@ -34,9 +34,7 @@
                         <th>Deskripsi</th>
                         <th>Terkirim</th>
                         <th>Penerima</th>
-                        <?php if(in_array($this->session->userdata('role_id'),[1,2])): ?>
                         <th>Aksi</th>
-                        <?php endif; ?>
                       </tr>
                     </thead>
                     <tbody>
@@ -52,8 +50,8 @@
                     <td><?= $row['receiver']; ?> Member</td>
                     <td class="text-center">
                         <?= $row['action']; ?><br><br>
-                        <div class="text-center">
-                            <div class="spinner-border text-secondary" id="wait" role="status">
+                        <div class="text-center" id="wait">
+                            <div class="spinner-border text-secondary" role="status">
                                 <span class="sr-only">Loading...</span>
                             </div>
                             <small id="label-wait">Loading...</small>
@@ -79,7 +77,7 @@
 
   <!-- /.content-wrapper -->
   <footer class="main-footer text-right">
-    <strong>Copyright &copy; 2021 <a href="<?php echo base_url();?>" target="_blank">Gerai Fashion</a>.</strong>
+    <strong>Copyright &copy; 2021 <a href="<?php echo base_url();?>gerai" target="_blank">Gerai Fashion</a>.</strong>
     All rights reserved.
   </footer>
 

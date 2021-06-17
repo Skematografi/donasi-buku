@@ -15,7 +15,7 @@
                   <h3><b>Produk</b></h3>
                 </div>
                 <div class="col-md-6">
-                <?php if(!in_array($this->session->userdata('role_id'),[2,3])): ?>
+                <?php if($this->session->userdata('role_id') != 3): ?>
                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_tambah"  style="float:right;" onclick="cleanForm()">Tambah</button>
                   <?php endif; ?>
                 </div>
@@ -38,7 +38,7 @@
                         <th>Ukuran</th>
                         <th>Harga (Rp)</th>
                         <th>Stok</th>
-                        <?php if(!in_array($this->session->userdata('role_id'),[2,3])): ?>
+                        <?php if($this->session->userdata('role_id') != 3): ?>
                         <th>Aksi</th>
                         <?php endif; ?>
                       </tr>
@@ -56,7 +56,7 @@
                         <td class="text-center"><?php echo $row['size']; ?></td>
                         <td class="text-center"><?php echo number_format($row['price'],2,',','.'); ?></td>
                         <td class="text-center"><?php echo ($row['stock'] > 0 ? $row['stock'] :  '<span class="badge badge-danger">Habis</span>'); ?></td>
-                        <?php if(!in_array($this->session->userdata('role_id'),[2,3])): ?>
+                        <?php if($this->session->userdata('role_id') != 3): ?>
                         <td class="text-center"><?php echo $row['action']; ?></td>
                         <?php endif; ?>
                       </tr>
@@ -79,7 +79,7 @@
 
   <!-- /.content-wrapper -->
   <footer class="main-footer text-right">
-    <strong>Copyright &copy; 2021 <a href="<?php echo base_url();?>" target="_blank">Gerai Fashion</a>.</strong>
+    <strong>Copyright &copy; 2021 <a href="<?php echo base_url();?>gerai" target="_blank">Gerai Fashion</a>.</strong>
     All rights reserved.
   </footer>
 

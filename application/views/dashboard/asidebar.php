@@ -48,7 +48,6 @@
               </p>
             </a>
           </li>
-          <?php if($this->session->userdata('role_id') != 2): ?>
           <li class="nav-item">
             <a href="<?php echo base_url();?>dashboard/keluhan" class="nav-link <?= ( $this->session->userdata('sidebar') == 'keluhan' ? 'active' : '' );?>">
               <i class="nav-icon fas fa-comments"></i>
@@ -57,7 +56,6 @@
               </p>
             </a>
           </li>
-          <?php endif; ?>
           <li class="nav-item">
             <a href="<?php echo base_url();?>dashboard/siaran" class="nav-link <?= ( $this->session->userdata('sidebar') == 'siaran' ? 'active' : '' );?>">
               <i class="nav-icon fas fa-send"></i>
@@ -66,7 +64,6 @@
               </p>
             </a>
           </li>
-          <?php if($this->session->userdata('role_id') == 1): ?>
           <li class="nav-item">
             <a href="<?php echo base_url();?>dashboard/laporan" class="nav-link <?= ( $this->session->userdata('sidebar') == 'laporan' ? 'active' : '' );?>">
               <i class="nav-icon fas fa-file-text"></i>
@@ -75,7 +72,6 @@
               </p>
             </a>
           </li>
-          <?php endif; ?>
            <li class="nav-item">
             <a href="<?php echo base_url();?>auth/logout" class="nav-link">
               <i class="nav-icon fa fa-sign-out"></i>
