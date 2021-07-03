@@ -6,7 +6,7 @@
     <a href="javascript:void(0);" class="brand-link">
       <img src="<?php echo base_url();?>assets/images/logo/logo.png" alt="AdminLTE Logo" class="brand-image"
            style="opacity: .8">
-      <span class="brand-text font-weight-light"><small></small></span>
+      <span class="brand-text font-weight-bold">Gudang Buku</span>
     </a>
 
     <!-- Sidebar -->
@@ -14,10 +14,10 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="<?php echo base_url();?>assets/images/avatar/muslimah.jpg" class="img-circle elevation-2" alt="User Image">
+          <img src="<?php echo base_url();?>assets/images/avatar/user.png" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="javascript:void(0);" class="d-block" style="color:#000;"><?php echo $this->session->userdata('full_name');?></a>
+          <a href="javascript:void(0);" class="d-block" style="color:#000;"><?php echo $this->session->userdata('name');?></a>
         </div>
       </div>
 
@@ -35,32 +35,34 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="<?php echo base_url();?>dashboard/produk" class="nav-link <?= ( $this->session->userdata('sidebar') == 'produk' ? 'active' : '' );?>">
-              <i class="fas fa-list nav-icon"></i>
-              <p>Produk</p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="<?php echo base_url();?>dashboard/member" class="nav-link <?= ( $this->session->userdata('sidebar') == 'member' ? 'active' : '' );?>">
+            <a href="<?php echo base_url();?>dashboard/donatur" class="nav-link <?= ( $this->session->userdata('sidebar') == 'donatur' ? 'active' : '' );?>">
               <i class="nav-icon fas fa-users"></i>
               <p>
-                Member
+                Donatur
               </p>
             </a>
           </li>
           <li class="nav-item">
-            <a href="<?php echo base_url();?>dashboard/keluhan" class="nav-link <?= ( $this->session->userdata('sidebar') == 'keluhan' ? 'active' : '' );?>">
-              <i class="nav-icon fas fa-comments"></i>
+            <a href="<?php echo base_url();?>dashboard/penerima" class="nav-link <?= ( $this->session->userdata('sidebar') == 'penerima' ? 'active' : '' );?>">
+              <i class="nav-icon fas fa-users"></i>
               <p>
-                Keluhan
+                Penerima
               </p>
             </a>
           </li>
           <li class="nav-item">
-            <a href="<?php echo base_url();?>dashboard/siaran" class="nav-link <?= ( $this->session->userdata('sidebar') == 'siaran' ? 'active' : '' );?>">
-              <i class="nav-icon fas fa-send"></i>
+            <a href="<?php echo base_url();?>dashboard/donasi" class="nav-link <?= ( $this->session->userdata('sidebar') == 'donasi' ? 'active' : '' );?>">
+              <i class="nav-icon fas fa-book"></i>
               <p>
-                Siaran
+                Buku Donasi
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="<?php echo base_url();?>dashboard/kebutuhan" class="nav-link <?= ( $this->session->userdata('sidebar') == 'kebutuhan' ? 'active' : '' );?>">
+              <i class="nav-icon fas fa-book"></i>
+              <p>
+                Kebutuhan Buku
               </p>
             </a>
           </li>

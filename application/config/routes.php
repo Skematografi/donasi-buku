@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-$route['default_controller'] = 'Auth';
+$route['default_controller'] = 'App';
 $route['Forget-password'] = 'Auth/forget_password';
 
 

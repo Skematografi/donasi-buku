@@ -3,10 +3,10 @@
 <div class="login-box">
   <div class="card">
     <div class="card-body login-card-body">
-      <img src="<?php echo base_url();?>assets/images/logo/logo.png" alt="AdminLTE Logo" class="brand-image mb-3 mx-auto d-block" style=" width:200px; height:70px; opacity: .8;">
-      <p class="login-box-msg">Lupa password? Buat password baru disini.</p>
-
-      <form action="<?php echo base_url();?>" method="post" autocomplete="off">
+      <img src="<?php echo base_url();?>assets/images/logo/library.jpg" alt="AdminLTE Logo" class="brand-image mb-3 mx-auto d-block" style=" width:200px; height:70px; opacity: .8;">
+      <p class="login-box-msg">Masukan email anda</p>
+      <?php echo $this->session->flashdata('message'); ?>
+      <form action="<?php echo base_url();?>auth/reset_password" method="post" autocomplete="off">
         <div class="input-group mb-3">
           <input type="email" class="form-control" name="email" id="email" placeholder="Email" required>
           <div class="input-group-append">
@@ -21,14 +21,12 @@
           </div>
           <!-- /.col -->
         </div>
-      </form>
-
-      <p class="mt-3 mb-1">
+        <label for="" class="mt-2">Sudah punya akun?</label><br>
         <a href="<?php echo base_url();?>auth">Masuk</a>
-      </p>
-      <p>
-          <a style="color: #cc3399;" href="<?php echo base_url();?>" class="text-center"><i class="fa fa-sign-out"></i> Kembali</a>
-        </p>
+      </form>
+    </div>
+    <div class="card-footer">
+      <a href="<?php echo base_url();?>"> Kembali ke Website</a>
     </div>
     <!-- /.login-card-body -->
   </div>

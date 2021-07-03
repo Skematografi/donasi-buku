@@ -31,14 +31,14 @@
             <!-- small box -->
             <div class="small-box bg-info">
               <div class="inner">
-                <h3><?= $produk->total; ?></h3>
+                <h3><?= $donatur->total; ?></h3>
 
-                <p>Produk</p>
+                <p>Donatur</p>
               </div>
               <div class="icon">
-                <i class="fas fa-list"></i>
+                <i class="fas fa-users"></i>
               </div>
-              <a href="<?= base_url(); ?>dashboard/produk" class="small-box-footer">Lihat Detail <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="<?= base_url(); ?>dashboard/donatur" class="small-box-footer">Lihat Detail <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
 
@@ -46,29 +46,14 @@
             <!-- small box -->
             <div class="small-box bg-warning">
               <div class="inner">
-                <h3><?= $member->total; ?></h3>
+                <h3><?= $donasi->total; ?></h3>
 
-                <p>Member</p>
+                <p>Buku Donasi</p>
               </div>
               <div class="icon">
-                <i class="fas fa-users"></i>
+                <i class="fas fa-book"></i>
               </div>
-              <a href="<?= base_url(); ?>dashboard/member" class="small-box-footer">Lihat Detail <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-danger">
-              <div class="inner">
-                <h3><?= $keluhan->total; ?></h3>
-
-                <p>Keluhan</p>
-              </div>
-              <div class="icon">
-                <i class="fas fa-comments"></i>
-              </div>
-              <a href="<?= base_url(); ?>dashboard/keluhan" class="small-box-footer">Lihat Detail <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="<?= base_url(); ?>dashboard/donasi" class="small-box-footer">Lihat Detail <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
 
@@ -76,14 +61,29 @@
             <!-- small box -->
             <div class="small-box bg-success">
               <div class="inner">
-                <h3><?= $siaran->total; ?></h3>
+                <h3><?= $penerima->total; ?></h3>
 
-                <p>Siaran</p>
+                <p>Penerima Donasi</p>
               </div>
               <div class="icon">
-                <i class="fas fa-send"></i>
+                <i class="fas fa-users"></i>
               </div>
-              <a href="<?= base_url(); ?>dashboard/siaran" class="small-box-footer">Lihat Detail <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="<?= base_url(); ?>dashboard/penerima" class="small-box-footer">Lihat Detail <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-danger">
+              <div class="inner">
+                <h3><?= $kebutuhan->total; ?></h3>
+
+                <p>Kebutuhan Buku</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-book"></i>
+              </div>
+              <a href="<?= base_url(); ?>dashboard/kebutuhan" class="small-box-footer">Lihat Detail <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
 

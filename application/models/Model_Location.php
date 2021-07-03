@@ -18,5 +18,16 @@ class Model_Location extends CI_Model {
         $query = $this->db->query("SELECT district, district_id FROM locations WHERE city_id = '".$city_id."'");
         return $query->result_array();
     }
+
+    public function generateRandomString($length = 10) {
+        $characters = '123456789ABCDEFGHIJKLMNPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+
+        return $randomString;
+    }
  
 }

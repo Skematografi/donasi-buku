@@ -17,23 +17,19 @@
                 <div class="row">
                   <div class="col-sm-6">
                       <div class="form-group">
-                        <label for="exampleInputPassword1">Kategori Keluhan<span class="text-danger">*</span></label>
-                        <select class="form-control" name="category" required>
-                            <option value="" selected disabled>--Pilih Kategori Keluhan--</option>
-                            <option value="Produk">Produk</option>
-                            <option value="Pelayanan">Pelayanan</option>
-                            <option value="Lain-lain">Lain-lain</option>
+                        <label for="exampleInputPassword1">Jenis Buku <span class="text-danger">*</span></label>
+                        <select class="form-control" name="category" onchange="getStatus(this)" required>
+                            <option value="" selected disabled>--Pilih Jenis Buku--</option>
+                            <option value="Donasi">Buku Donasi</option>
+                            <option value="Kebutuhan">Kebutuhan Buku</option>
                         </select>
                       </div>
                   </div>
                   <div class="col-sm-6">
                       <div class="form-group">
-                          <label for="exampleInputEmail1">Status</label>
-                          <select class="form-control" name="status" id="status">
+                          <label for="exampleInputEmail1">Status <span class="text-danger">*</span></label>
+                          <select class="form-control" name="status" id="status" onchange="openStart()" required disabled>
                               <option value="" selected disabled>--Pilih Status--</option>
-                              <option value="Menunggu Tindakan">Menunggu Tindakan</option>
-                              <option value="Proses">Proses</option>
-                              <option value="Selesai">Selesai</option>
                           </select>
                       </div>
                   </div>
@@ -41,14 +37,14 @@
                 <div class="row">
                   <div class="col-sm-6">
                     <div class="form-group">
-                      <label for="exampleInputPassword1">Tanggal Mulai<span class="text-danger">*</span></label>
-                      <input type="date" class="form-control" id="start_date" name="start_date" required>
+                      <label for="exampleInputPassword1">Tanggal Mulai <span class="text-danger">*</span></label>
+                      <input type="date" class="form-control" id="start_date" onchange="openEnd()" name="start_date" required disabled>
                     </div>
                   </div>
                   <div class="col-sm-6">
                     <div class="form-group">
-                      <label for="exampleInputPassword1">Tanggal Akhir<span class="text-danger">*</span></label>
-                      <input type="date" class="form-control" id="end_date" name="end_date" required>
+                      <label for="exampleInputPassword1">Tanggal Akhir <span class="text-danger">*</span></label>
+                      <input type="date" class="form-control" id="end_date" name="end_date" required disabled>
                     </div>
                   </div>
                 </div>
@@ -69,7 +65,7 @@
   </div>
   <!-- /.content-wrapper -->
   <footer class="main-footer text-right">
-    <strong>Copyright &copy; 2021 <a href="<?php echo base_url();?>gerai" target="_blank">Gerai Fashion</a>.</strong>
+    <strong>Copyright &copy; 2021 <a href="<?php echo base_url();?>" target="_blank">Gudang Buku</a>.</strong>
     All rights reserved.
   </footer>
 
@@ -99,33 +95,28 @@
     $('#wait,#label-wait').hide(); 
   });
 
-  function proses(ele){
+  function getStatus(ele){
 
-    let id = $(ele).attr('data-id');
-    let url = '<?= base_url(); ?>Dashboard/prosesKeluhan';
+    let jenis = $(ele).val();
 
-    $.ajax({
-      url : url,
-      method : 'POST',
-      data: {id: id},
-      dataType: 'json',
-      beforeSend: function() { $('#wait,#label-wait').show(); },
-      complete: function() { $('#wait,#label-wait').hide(); },
-      success : function(res){
-        window.location.href = "<?= base_url(); ?>"+res.link;
-      }, error : function(err){
-        console.log(err)
-      }
-    });
+    $('#status').empty().append('<option value="" selected disabled>--Pilih Status--</option>');
+
+    if(jenis == 'Donasi'){
+      $('#status').append('<option value="Donasi">Masih Tersedia</option><option value="Donasi Selesai">Tidak Ada</option>');
+    } else {
+      $('#status').append('<option value="Kebutuhan">Belum Terpenuhi</option><option value="Kebutuhan Selesai">Sudah Terpenuhi</option>');
+    }
+
+    $('#status').attr('disabled', false);
   }
 
-  function selesai(ele){
+  function openStart(){
+    $('#start_date').attr('disabled', false);
+  }
 
-    let id = $(ele).attr('data-id');
-    $('#complaint_id').val(id);
-    $('#modal_tindakan').modal('show');
-    $('#wait,#label-wait').show();
-}
+  function openEnd(){
+    $('#end_date').attr('disabled', false);
+  }
 
 </script>
 </body>
