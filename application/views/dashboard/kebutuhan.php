@@ -28,7 +28,7 @@
                   <th width="300px;">Deskripsi</th>
                   <th>Kategori</th>
                   <th>Jumlah</th>
-                  <th>Penerima Donasi</th>
+                  <th>Pemohon</th>
                   <th>Status</th>
                 </tr>
                 </thead>
@@ -37,7 +37,7 @@
                     <tr>
                         <td class="text-center"><?= $i++; ?></td>
                         <td>
-                            <img src="<?php echo base_url();?>assets/buku/<?= $row['image']; ?>" alt="" style="width:200px; opacity: .8;">
+                            <img src="<?php echo base_url();?>assets/buku/<?= $row['image']; ?>" alt="" style="width:100px; opacity: .8;">
                         </td>
                         <td>
                             Judul : <br><b class="text-info"><?= $row['title']; ?></b><br>
@@ -57,6 +57,11 @@
                                     echo '<span class="badge badge-danger">Belum Terpenuhi</span>';
                                 } else {
                                     echo '<span class="badge badge-success">Sudah Terpenuhi</span>';
+                                    echo '<br>Donatur : <b>'.$row['sender'].'</b><br>';
+                                    echo 'Telp. : <b>0'.substr($row['sender_phone'], 2).'</b><br>';
+                                    echo 'Lokasi : <b>'.$row['location'].'</b><br><br>';
+                                    echo '<img src="'.base_url().'assets/dokumentasi/'.$row['dokumentasi'].'" alt="" style="width:200px; opacity: .8;">';
+                                
                                 }
                             ?>
                         </td>

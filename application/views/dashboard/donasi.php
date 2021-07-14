@@ -11,7 +11,7 @@
             <div class="card-header">
               <div class="row">
                 <div class="col-md-6">
-                  <h3><b>List Penerima</b></h3>
+                  <h3><b>List Buku Donasi</b></h3>
                 </div>
                 <div class="col-md-6">
                 </div>
@@ -37,7 +37,7 @@
                     <tr>
                         <td class="text-center"><?= $i++; ?></td>
                         <td>
-                            <img src="<?php echo base_url();?>assets/buku/<?= $row['image']; ?>" alt="" style="width:200px; opacity: .8;">
+                            <img src="<?php echo base_url();?>assets/buku/<?= $row['image']; ?>" alt="" style="width:100px; opacity: .8;">
                         </td>
                         <td>
                             Judul : <br><b class="text-info"><?= $row['title']; ?></b><br>
@@ -55,8 +55,12 @@
                             <?php
                                 if($row['status'] == 'Donasi'){
                                     echo '<span class="badge badge-success">Masih Tersedia</span>';
-                                } else {
+                                  } else {
                                     echo '<span class="badge badge-secondary">Tidak Ada</span>';
+                                    echo '<br>Penerima Donasi : <b>'.$row['receiver'].'</b><br>';
+                                    echo 'Telp. : <b>0'.substr($row['receiver_phone'], 2).'</b><br>';
+                                    echo 'Lokasi : <b>'.$row['location'].'</b><br><br>';
+                                    echo '<img src="'.base_url().'assets/dokumentasi/'.$row['dokumentasi'].'" alt="" style="width:200px; opacity: .8;">';
                                 }
                             ?>
                         </td>

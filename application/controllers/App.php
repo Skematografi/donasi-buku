@@ -141,6 +141,7 @@ class App extends CI_Controller {
 				'delivery_date' => $this->input->post('delivery_date',TRUE),
 				'book_id' => $book_id,
 				'sender_id' => htmlspecialchars($this->input->post('sender_id',TRUE)),
+				'receiver_id' => $this->session->userdata('account_id'),
 				'location' => $this->input->post('location',TRUE)
 			];
 			$this->Model_Konfirmasi->simpanKonfDonasi($data); //memasukan data ke database
@@ -251,6 +252,7 @@ class App extends CI_Controller {
 				'image' => $file['file_name'],
 				'delivery_date' => $this->input->post('delivery_date',TRUE),
 				'book_id' => $book_id,
+                'sender_id' => $this->session->userdata('account_id'),
 				'receiver_id' => htmlspecialchars($this->input->post('receiver_id',TRUE)),
 				'location' => $this->input->post('location',TRUE)
 			];

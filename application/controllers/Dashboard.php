@@ -82,7 +82,15 @@ class Dashboard extends CI_Controller {
 		$this->load->view('dashboard/asidebar');
 
 		$data['donasi']=$this->db->query("SELECT a.*,
-										(SELECT b.name FROM accounts b WHERE b.id = a.account_id) as donatur
+										(SELECT b.name FROM accounts b WHERE b.id = a.account_id) as donatur,
+										(SELECT b.image FROM confirmations b WHERE b.book_id = a.id) as dokumentasi,
+										(SELECT b.location FROM confirmations b WHERE b.book_id = a.id) as location,
+										(SELECT c.name FROM confirmations b 
+											LEFT JOIN accounts c ON c.id = b.receiver_id
+											WHERE b.book_id = a.id) as receiver,
+										(SELECT c.phone FROM confirmations b 
+											LEFT JOIN accounts c ON c.id = b.receiver_id
+											WHERE b.book_id = a.id) as receiver_phone
 										FROM books a 
 										WHERE a.status LIKE 'Donasi%'
 										ORDER BY a.status")->result_array();
@@ -98,7 +106,15 @@ class Dashboard extends CI_Controller {
 		$this->load->view('dashboard/asidebar');
 
 		$data['kebutuhan']=$this->db->query("SELECT a.*,
-										(SELECT b.name FROM accounts b WHERE b.id = a.account_id) as penerima
+										(SELECT b.name FROM accounts b WHERE b.id = a.account_id) as penerima,
+										(SELECT b.image FROM confirmations b WHERE b.book_id = a.id) as dokumentasi,
+										(SELECT b.location FROM confirmations b WHERE b.book_id = a.id) as location,
+										(SELECT c.name FROM confirmations b 
+											LEFT JOIN accounts c ON c.id = b.sender_id
+											WHERE b.book_id = a.id) as sender,
+										(SELECT c.phone FROM confirmations b 
+											LEFT JOIN accounts c ON c.id = b.sender_id
+											WHERE b.book_id = a.id) as sender_phone
 										FROM books a 
 										WHERE a.status LIKE 'Kebutuhan%'
 										ORDER BY a.status")->result_array();
@@ -182,7 +198,195 @@ class Dashboard extends CI_Controller {
 
 		$this->load->library('pdf');
         $html = $this->load->view('dashboard/laporanPdf', $data, true);
-        $this->pdf->createPDF($html, 'mypdf', false);
+        $this->pdf->createPDF($html, 'laporan_buku', false);
+	}
+
+	public function cetakLaporanUser(){
+
+		$type = $this->input->post('user');
+		$status = $this->input->post('status_user');
+		$label_status = $this->input->post('label_status');
+		
+		if($type == 3){
+			$users = $this->filterDonatur($status);
+			$jenis = 'Donatur';
+		} else {
+			$users = $this->filterPenerima($status);
+			$jenis = 'Penerima Donasi';
+		}
+
+		$data['report'] = $users;
+		$data['jenis'] = $jenis;
+		$data['label_status'] = $label_status;
+
+		// echo '<pre>';
+		// var_dump($users);
+		// echo '</pre>';
+
+		// die();
+
+		$this->load->library('pdf');
+        $html = $this->load->view('dashboard/laporanUser', $data, true);
+        $this->pdf->createPDF($html, 'laporan_user', false);
+	}
+
+	private function filterDonatur($status){
+
+		$user = [];
+		$book_id = [];
+
+		$arr_book = $this->db->query("SELECT book_id as id FROM confirmations")->result();
+		foreach($arr_book as $item){
+			$book_id[] = $item->id;
+		}
+
+		$book = implode(',', $book_id);
+
+		$users = $this->db->query("SELECT a.*, 
+						(SELECT count(b.id) as total FROM confirmations b WHERE b.sender_id = a.id) as total_sender,
+						(SELECT count(c.id) as total FROM books c WHERE c.account_id = a.id AND c.id NOT IN ('$book') ) as total_donasi
+						FROM accounts a
+						WHERE a.status = 1 AND a.npm IS NOT NULL
+						ORDER BY total_sender DESC, total_donasi DESC ")->result_array();
+
+		if($status == '0'){
+
+			foreach($users as $row) {
+				if($row['total_sender'] == 0 && $row['total_donasi'] == 0){
+
+					$contact =  'Telepon : <br><b>'.$row['phone'].'</b><br>';
+					$contact .=  'Email : <br><b>'.$row['email'].'</b><br>';
+					$contact .=  'Alamat : <br><b>'.$row['address'].' '.$row['district'].' '.$row['city'].' '.$row['state'].' '.'</b>';
+
+					$user[] = [
+						'npm' => $row['npm'],
+						'type' => $row['type'],
+						'name' => $row['name'],
+						'gender' => $row['gender'],
+						'contact' => $contact,
+						'total_sender' => $row['total_sender'],
+						'total_donasi' => $row['total_donasi']
+					];
+				}
+			}
+
+		} else if($status == '1'){
+
+			foreach($users as $row) {
+				if($row['total_sender'] > 0 || $row['total_donasi'] > 0){
+
+					$contact =  'Telepon : <br><b>'.$row['phone'].'</b><br>';
+					$contact .=  'Email : <br><b>'.$row['email'].'</b><br>';
+					$contact .=  'Alamat : <br><b>'.$row['address'].' '.$row['district'].' '.$row['city'].' '.$row['state'].' '.'</b>';
+
+					$user[] = [
+						'npm' => $row['npm'],
+						'type' => $row['type'],
+						'name' => $row['name'],
+						'gender' => $row['gender'],
+						'contact' => $contact,
+						'total_sender' => $row['total_sender'],
+						'total_donasi' => $row['total_donasi']
+						
+					];
+				}
+			}
+
+		} else {
+
+			foreach($users as $row) {
+
+				$contact =  'Telepon : <br><b>'.$row['phone'].'</b><br>';
+				$contact .=  'Email : <br><b>'.$row['email'].'</b><br>';
+				$contact .=  'Alamat : <br><b>'.$row['address'].' '.$row['district'].' '.$row['city'].' '.$row['state'].' '.'</b>';
+
+				$user[] = [
+					'npm' => $row['npm'],
+					'type' => $row['type'],
+					'name' => $row['name'],
+					'gender' => $row['gender'],
+					'contact' => $contact,
+					'total_sender' => $row['total_sender'],
+					'total_donasi' => $row['total_donasi']
+				];
+			}
+
+		}
+
+		return $user;
+	}
+
+	private function filterPenerima($status){
+
+		$user = [];
+
+		$users = $this->db->query("SELECT a.*, 
+						(SELECT count(b.id) as total FROM confirmations b WHERE b.receiver_id = a.id) as total_receiver
+						FROM accounts a
+						WHERE a.status = 1 AND a.npm IS NULL
+						ORDER BY total_receiver DESC ")->result_array();
+
+		if($status == '0'){
+
+			foreach($users as $row) {
+				if($row['total_receiver'] == 0){
+
+					$contact =  'Telepon : <br><b>'.$row['phone'].'</b><br>';
+					$contact .=  'Email : <br><b>'.$row['email'].'</b><br>';
+					$contact .=  'Alamat : <br><b>'.$row['address'].' '.$row['district'].' '.$row['city'].' '.$row['state'].' '.'</b>';
+
+					$user[] = [
+						'npm' => $row['npm'],
+						'type' => $row['type'],
+						'name' => $row['name'],
+						'gender' => $row['gender'],
+						'contact' => $contact,
+						'total_receiver' => $row['total_receiver']
+					];
+				}
+			}
+
+		} else if($status == '1'){
+
+			foreach($users as $row) {
+				if($row['total_receiver'] > 0){
+
+					$contact =  'Telepon : <br><b>'.$row['phone'].'</b><br>';
+					$contact .=  'Email : <br><b>'.$row['email'].'</b><br>';
+					$contact .=  'Alamat : <br><b>'.$row['address'].' '.$row['district'].' '.$row['city'].' '.$row['state'].' '.'</b>';
+
+					$user[] = [
+						'npm' => $row['npm'],
+						'type' => $row['type'],
+						'name' => $row['name'],
+						'gender' => $row['gender'],
+						'contact' => $contact,
+						'total_receiver' => $row['total_receiver']
+					];
+				}
+			}
+
+		} else {
+
+			foreach($users as $row) {
+
+				$contact =  'Telepon : <br><b>'.$row['phone'].'</b><br>';
+				$contact .=  'Email : <br><b>'.$row['email'].'</b><br>';
+				$contact .=  'Alamat : <br><b>'.$row['address'].' '.$row['district'].' '.$row['city'].' '.$row['state'].' '.'</b>';
+
+				$user[] = [
+					'npm' => $row['npm'],
+					'type' => $row['type'],
+					'name' => $row['name'],
+					'gender' => $row['gender'],
+					'contact' => $contact,
+					'total_receiver' => $row['total_receiver']
+				];
+			}
+
+		}
+
+		return $user;
 	}
 
 }

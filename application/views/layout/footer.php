@@ -7,12 +7,12 @@
       </div>
     </div>
   </footer><!-- End Footer -->
-<!-- 
-  <a href="https://api.whatsapp.com/send?phone=6283896117890&text=Assalamualaikum%20Wr.%20Wb.%20Admin%20Gerai%20Fashion" target="_blank" class="icon-whatsapp">
-      <img src="<?php echo base_url();?>assets/images/logo/whatsapp.png" alt="icon whatsapp" id="whatsapp" >
-  </a> -->
 
-  <!-- <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a> -->
+  <a href="https://api.whatsapp.com/send?phone=6281278347560&text=Hai%20Admin%20Gudang%20Buku" target="_blank" class="icon-whatsapp" title="Hubungi admin gudang buku">
+      <img src="<?php echo base_url();?>assets/images/logo/whatsapp.png" alt="icon whatsapp" id="whatsapp" >
+  </a>
+<!-- 
+  <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a> -->
 
   <!-- Vendor JS Files -->
   <script src="<?php echo base_url();?>assets/vendor/jquery/jquery.min.js"></script>
